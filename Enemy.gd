@@ -1,4 +1,4 @@
-extends Sprite
+extends KinematicBody2D
 
 
 export (Color) var blue = Color("#4682b4")

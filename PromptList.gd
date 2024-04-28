@@ -2,7 +2,11 @@ extends Node
 
 var words = [
 	"great", 
-	"work"
+	"work",
+	"Try",
+	"Hard",
+	"Makes",
+	"Perfect"
 ]
 
 func get_prompt() -> String:
