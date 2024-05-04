@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://assets/SPRITES/Enemy/2.png" type="Texture" id=1]
+[ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Enemy.gd" type="Script" id=3]
+[ext_resource path="res://assets/SPRITES/Enemy/1.png" type="Texture" id=4]
+[ext_resource path="res://assets/SPRITES/Enemy/3.png" type="Texture" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 14
+font_data = ExtResource( 2 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "Enemy"
+length = 0.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 4 ), ExtResource( 1 ), ExtResource( 5 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 27, 21.75 )
+
+[node name="Enemy" type="KinematicBody2D"]
+position = Vector2( 829, 221 )
+script = ExtResource( 3 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = -79.0
+margin_top = -45.0
+margin_right = 84.0
+margin_bottom = -24.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center]type this[/center]"
+text = "type this"
+scroll_active = false
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.05, 0.05 )
+region_rect = Rect2( 517.656, 409.344, 82.0208, 83.5683 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Sprite")
+anims/Enemy = SubResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 1.75 )
+shape = SubResource( 2 )
