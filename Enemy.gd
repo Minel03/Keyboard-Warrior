@@ -29,7 +29,14 @@ func set_difficuty(difficulty: int):
 func handle_difficulty_increased(new_difficulty: int):
 	var new_speed = speed + (0.125 * new_difficulty)
 	speed = clamp(new_speed, speed, 3)
-	animation.play("Enemy")
+	var animation_player = $AnimationPlayer
+	var animation_list = animation_player.get_animation_list()
+	if animation_list.size() > 0:
+		var random_animation_index = randi() % animation_list.size()
+		var random_animation_name = animation_list[random_animation_index]
+		animation_player.play(random_animation_name)
+	else:
+		print("No animations found in AnimationPlayer.")
 
 
 func get_prompt() -> String:
