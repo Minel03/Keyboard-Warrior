@@ -11,17 +11,22 @@ config_version=4
 [application]
 
 config/name="Finals"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 PromptList="*res://PromptList.gd"
 GlobalSignals="*res://GlobalSignals.gd"
+Bgm="*res://bgm.tscn"
+ClickSound="*res://ClickSound.tscn"
+SynonymList="*res://InfiniteList.gd"
 
 [display]
 
-window/size/width=360
+window/size/width=560
+window/size/height=936
+window/handheld/orientation="portrait"
 
 [global]
 
