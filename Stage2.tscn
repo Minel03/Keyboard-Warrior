@@ -1,12 +1,19 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://Stage1.gd" type="Script" id=1]
+[ext_resource path="res://Stage2.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/Area/Day.png" type="Texture" id=3]
 [ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
+[ext_resource path="res://assets/skills/doom.png" type="Texture" id=5]
+[ext_resource path="res://assets/skills/freeze.png" type="Texture" id=6]
+[ext_resource path="res://assets/skills/shield.png" type="Texture" id=7]
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 26.9993, 309 )
+extents = Vector2( 26.9993, 310.25 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 20
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 48
@@ -20,19 +27,23 @@ font_data = ExtResource( 2 )
 size = 25
 font_data = ExtResource( 2 )
 
+[sub_resource type="DynamicFont" id=8]
+size = 20
+font_data = ExtResource( 2 )
+
 [node name="Main" type="Node2D"]
 script = ExtResource( 1 )
 
 [node name="TextureRect" type="TextureRect" parent="."]
 margin_top = 1.0
-margin_right = 621.0
+margin_right = 620.0
 margin_bottom = 785.0
 texture = ExtResource( 3 )
 expand = true
 stretch_mode = 1
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 310, 752 )
+position = Vector2( 309, 752 )
 scale = Vector2( 0.05, 0.05 )
 texture = ExtResource( 4 )
 
@@ -40,7 +51,7 @@ texture = ExtResource( 4 )
 position = Vector2( -1, 304 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LoseArea"]
-position = Vector2( 311, 440 )
+position = Vector2( 309.75, 440 )
 rotation = 1.5708
 shape = SubResource( 2 )
 
@@ -70,6 +81,68 @@ wait_time = 4.0
 wait_time = 60.0
 autostart = true
 
+[node name="BossSpawnContainer" type="Node2D" parent="."]
+
+[node name="Position2D" type="Position2D" parent="BossSpawnContainer"]
+position = Vector2( 310, -88 )
+
+[node name="BossContainer" type="Node2D" parent="."]
+
+[node name="BossTimer" type="Timer" parent="."]
+wait_time = 300.0
+autostart = true
+
+[node name="Label" type="Label" parent="."]
+margin_left = 390.0
+margin_top = 755.0
+margin_right = 430.0
+margin_bottom = 786.0
+custom_fonts/font = SubResource( 9 )
+text = "1"
+align = 1
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 470.0
+margin_top = 755.0
+margin_right = 510.0
+margin_bottom = 786.0
+custom_fonts/font = SubResource( 9 )
+text = "2"
+align = 1
+
+[node name="Label3" type="Label" parent="."]
+margin_left = 550.0
+margin_top = 755.0
+margin_right = 590.0
+margin_bottom = 786.0
+custom_fonts/font = SubResource( 9 )
+text = "3"
+align = 1
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+margin_left = 370.0
+margin_top = 685.0
+margin_right = 770.0
+margin_bottom = 1085.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 6 )
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+margin_left = 450.0
+margin_top = 685.0
+margin_right = 850.0
+margin_bottom = 1085.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 7 )
+
+[node name="TextureRect4" type="TextureRect" parent="."]
+margin_left = 530.0
+margin_top = 685.0
+margin_right = 930.0
+margin_bottom = 1085.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 5 )
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer"]
@@ -78,32 +151,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -11.0
 margin_right = 6.0
-margin_bottom = 4.0
+margin_bottom = 6.0
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/GameOverScreen"]
 margin_left = 7.0
 margin_top = 7.0
-<<<<<<< Updated upstream
-margin_right = 570.0
-margin_bottom = 928.0
-mouse_filter = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer"]
-margin_left = 165.0
-margin_top = 314.0
-margin_right = 397.0
-margin_bottom = 606.0
-=======
 margin_right = 630.0
-margin_bottom = 782.0
+margin_bottom = 784.0
 mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer"]
 margin_left = 195.0
-margin_top = 241.0
+margin_top = 242.0
 margin_right = 427.0
-margin_bottom = 533.0
->>>>>>> Stashed changes
+margin_bottom = 534.0
 custom_constants/separation = 50
 
 [node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
@@ -127,22 +188,18 @@ custom_fonts/font = SubResource( 4 )
 text = "STAGE MENU"
 
 [node name="CompleteScreen" type="PanelContainer" parent="CanvasLayer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -11.0
 margin_right = 6.0
-margin_bottom = 6.0
+margin_bottom = 7.0
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/CompleteScreen"]
 margin_left = 7.0
 margin_top = 7.0
-<<<<<<< Updated upstream
-margin_right = 570.0
-margin_bottom = 928.0
-=======
 margin_right = 630.0
-margin_bottom = 784.0
->>>>>>> Stashed changes
+margin_bottom = 785.0
 mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CompleteScreen/CenterContainer"]
@@ -177,8 +234,6 @@ text = "STAGE MENU"
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -1.0
-margin_right = -1.0
 mouse_filter = 2
 
 [node name="TopRowLeft" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
@@ -200,11 +255,7 @@ text = "0"
 
 [node name="TopRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/TopRowLeft"]
 margin_left = 113.0
-<<<<<<< Updated upstream
-margin_right = 327.0
-=======
 margin_right = 598.0
->>>>>>> Stashed changes
 margin_bottom = 38.0
 mouse_filter = 2
 
@@ -216,11 +267,9 @@ text = "        Timer:"
 
 [node name="TimerValue" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
 margin_left = 214.0
-margin_right = 214.0
+margin_right = 289.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
-<<<<<<< Updated upstream
-=======
 text = "00:00"
 
 [node name="TimerValue2" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
@@ -235,7 +284,6 @@ margin_left = 432.0
 margin_right = 485.0
 margin_bottom = 38.0
 text = "PAUSE"
->>>>>>> Stashed changes
 
 [node name="TopRowLeft2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_top = 42.0
@@ -243,7 +291,7 @@ margin_right = 620.0
 margin_bottom = 80.0
 
 [node name="TopRow2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/TopRowLeft2"]
-margin_right = 184.0
+margin_right = 169.0
 margin_bottom = 38.0
 mouse_filter = 2
 
@@ -255,41 +303,50 @@ text = "Difficulty:"
 
 [node name="DifficultyValue" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2"]
 margin_left = 169.0
-margin_right = 184.0
+margin_right = 169.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
-text = "0"
 
-<<<<<<< Updated upstream
 [node name="MiddleRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_top = 84.0
-margin_right = 560.0
-margin_bottom = 505.0
+margin_right = 620.0
+margin_bottom = 746.0
 mouse_filter = 2
 size_flags_vertical = 3
 
-[node name="MiddleRow2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-margin_top = 509.0
-margin_right = 560.0
-margin_bottom = 931.0
+[node name="TopRow3" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
+margin_top = 750.0
+margin_right = 620.0
+margin_bottom = 781.0
 mouse_filter = 2
-size_flags_vertical = 3
+
+[node name="SP" type="Label" parent="CanvasLayer/VBoxContainer/TopRow3"]
+margin_right = 36.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 8 )
+text = "SP:"
+
+[node name="SPValue" type="Label" parent="CanvasLayer/VBoxContainer/TopRow3"]
+margin_left = 40.0
+margin_right = 40.0
+margin_bottom = 31.0
+custom_fonts/font = SubResource( 8 )
 
 [node name="BottomRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-margin_top = 935.0
-margin_right = 560.0
-margin_bottom = 935.0
+margin_top = 785.0
+margin_right = 620.0
+margin_bottom = 785.0
 mouse_filter = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/BottomRow"]
 mouse_filter = 2
 
-=======
->>>>>>> Stashed changes
 [connection signal="body_entered" from="LoseArea" to="." method="_on_LoseArea_body_entered"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
 [connection signal="timeout" from="DifficultyTimer" to="." method="_on_DifficultyTimer_timeout"]
+[connection signal="timeout" from="BossTimer" to="." method="_on_BossTimer_timeout"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/PlayAgainButton" to="." method="_on_RestartButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/TopRowLeft/TopRow/PauseButton" to="." method="_on_PauseButton_pressed"]

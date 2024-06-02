@@ -1,6 +1,7 @@
 extends Node2D
 
 var Enemy = preload("res://Enemy.tscn")
+var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
@@ -17,12 +18,16 @@ onready var timer_label = $CanvasLayer/VBoxContainer/TopRowLeft/TopRow/TimerValu
 var active_enemy = null
 var current_letter_index: int = -1
 
-var difficulty: int = 0
+var difficulty: int = 6
 var enemies_killed: int = 0
+var skillpoint: int = 0
 
 var game_duration_seconds: int = 0
 var timer_running: bool = false
 var timer_update: Timer = Timer.new()
+
+var barrier_health: int = 0
+var barrier_active: bool = false
 
 func _ready() -> void:
 	add_child(timer_update)
@@ -35,7 +40,7 @@ func update_timer() -> void:
 		var minutes = game_duration_seconds / 60
 		var seconds = game_duration_seconds % 60
 		timer_label.text = "%02d:%02d" % [minutes, seconds]
-		if minutes >= 5:
+		if minutes >= 10:
 			winner_screen.show()
 			label.hide()
 			spawn_timer.stop()
@@ -77,7 +82,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				if current_letter_index == prompt.length():
 					print("done")
 					current_letter_index = -1
-					active_enemy.queue_free()
+					launch_projectile(active_enemy)  # Launch the projectile at the enemy
 					active_enemy = null
 					enemies_killed += 1
 					score_value.text = str(enemies_killed)
@@ -135,6 +140,15 @@ func start_game():
 	start_timer()
 	timer_update.start(1)
 	spawn_enemy()
+
+func launch_projectile(target):
+	var projectile_instance = Projectile.instance()
+	projectile_instance.global_position = Vector2(309, 752)
+	add_child(projectile_instance)
+	projectile_instance.target = target
+
+func _on_enemy_death_animation_finished():
+	active_enemy.queue_free()
 
 func _on_RestartButton_pressed():
 	start_game()

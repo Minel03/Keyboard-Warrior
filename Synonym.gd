@@ -1,22 +1,34 @@
 extends Node2D
 
-var Enemy = preload("res://Enemy.tscn")
+var Enemy = preload("res://Enemy2.tscn")
+var Boss = preload("res://Boss.tscn")
+var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
 
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
+onready var boss_container = $BossContainer
+onready var bossspawn_container = $BossSpawnContainer/Position2D
+onready var boss_timer = $BossTimer
 onready var difficulty_timer = $DifficultyTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
+<<<<<<< Updated upstream:Synonym.gd
+=======
+onready var skill_point_label = $CanvasLayer/VBoxContainer/TopRow3/SPValue
+onready var label = $CanvasLayer/VBoxContainer
+>>>>>>> Stashed changes:Stage2.gd
 onready var game_over_screen = $CanvasLayer/GameOverScreen
 
 var active_enemy = null
+var completed_enemies: Array = []  # Track completed enemies
 var current_letter_index: int = -1
 
 var difficulty: int = 0
 var enemies_killed: int = 0
+var skillpoint: int = 0
 
 
 func _ready() -> void:
@@ -40,6 +52,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		var typed_event = event as InputEventKey
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
 		
+<<<<<<< Updated upstream:Synonym.gd
+=======
+		# Check for the '1' key press to activate freeze()
+		if typed_event.scancode == KEY_1:
+			freeze()
+			return
+		elif typed_event.scancode == KEY_2:
+			place_barrier(5)
+			return
+		elif typed_event.scancode == KEY_3:
+			remove_random_enemies(5)
+		
+>>>>>>> Stashed changes:Stage2.gd
 		if active_enemy == null:
 			find_new_active_enemy(key_typed)
 		else:
@@ -52,7 +77,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				if current_letter_index == prompt.length():
 					print("done")
 					current_letter_index = -1
-					active_enemy.queue_free()
+					launch_projectile(active_enemy)  # Launch the projectile at the enemy
 					active_enemy = null
 					enemies_killed += 1
 					score_value.text = str(enemies_killed)
@@ -72,6 +97,11 @@ func spawn_enemy():
 	enemy_container.add_child(enemy_instance)
 	enemy_instance.set_difficuty(difficulty)
 
+func spawn_boss():
+	var boss_instance = Boss.instance()
+	var boss_spawn_point = bossspawn_container.global_position  # Get the global position of the spawn point
+	boss_instance.global_position = boss_spawn_point  # Set the boss's position to the spawn point
+	boss_container.add_child(boss_instance)
 
 func _on_DifficultyTimer_timeout():
 	if difficulty >= 20:
@@ -94,6 +124,7 @@ func _on_LoseArea_body_entered(body: Node) -> void:
 func game_over():
 	game_over_screen.show()
 	spawn_timer.stop()
+	boss_timer.stop()
 	difficulty_timer.stop()
 	active_enemy = null
 	current_letter_index = -1
@@ -103,19 +134,88 @@ func game_over():
 
 func start_game():
 	game_over_screen.hide()
+<<<<<<< Updated upstream:Synonym.gd
 	difficulty = 0
+=======
+	winner_screen.hide()
+	skillpoint = 10
+	difficulty = 6
+>>>>>>> Stashed changes:Stage2.gd
 	enemies_killed = 0
 	difficulty_value.text = str(0)
 	score_value.text = str(0)
+	update_skill_point_label()  # Update skill point label at start
 	randomize()
 	spawn_timer.start()
+	boss_timer.start()
 	difficulty_timer.start()
 	spawn_enemy()
 
+<<<<<<< Updated upstream:Synonym.gd
+=======
+func update_skill_point_label():
+	print("Updating skill point label to %d" % skillpoint)  # Debugging print
+	skill_point_label.text = str(skillpoint)
+>>>>>>> Stashed changes:Stage2.gd
 
 func _on_RestartButton_pressed():
 	start_game()
 
 
 func _on_MenuButton_pressed():
+<<<<<<< Updated upstream:Synonym.gd
 	get_tree().change_scene("res://MainMenu.tscn")
+=======
+	get_tree().change_scene("res://StageMenu.tscn")
+
+var pause_scene = preload("res://Pause.tscn")
+onready var Click_sound = get_node("/root/ClickSound")
+
+func _on_PauseButton_pressed():
+	Click_sound.play()
+	var pause_instance = pause_scene.instance()
+	add_child(pause_instance)
+		
+	get_tree().paused = true
+	pause_instance.set_process_input(true)
+
+func freeze():
+	if skillpoint >= 3:
+		skillpoint -= 3
+		update_skill_point_label()
+		print("Skill points after using freeze: %d" % skillpoint)  # Debugging print
+		# Freeze enemies for 3 seconds
+		for enemy in enemy_container.get_children():
+			enemy.freeze()  # Call a freeze method on the enemy script
+		yield(get_tree().create_timer(3.0), "timeout")
+		# Slow down enemies for 2 seconds
+		for enemy in enemy_container.get_children():
+			enemy.slow_down()  # Call a slow_down method on the enemy script
+		yield(get_tree().create_timer(2.0), "timeout")
+
+func place_barrier(health: int):
+	if skillpoint >= 3:
+		skillpoint -= 3
+		update_skill_point_label()
+		print("Skill points after placing barrier: %d" % skillpoint)  # Debugging print
+		barrier_health = health
+		barrier_active = true
+
+func remove_random_enemies(count: int):
+	if skillpoint >= 4:
+		skillpoint -= 4
+		update_skill_point_label()
+		print("Skill points after removing enemies: %d" % skillpoint)  # Debugging print
+	var enemies = enemy_container.get_children()
+	for i in range(min(count, enemies.size())):
+		enemies[i].queue_free()
+
+func launch_projectile(target):
+	var projectile_instance = Projectile.instance()
+	projectile_instance.global_position = Vector2(309, 752)
+	add_child(projectile_instance)
+	projectile_instance.target = target
+
+func _on_BossTimer_timeout():
+	spawn_boss()
+>>>>>>> Stashed changes:Stage2.gd
