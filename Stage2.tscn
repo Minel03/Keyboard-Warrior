@@ -1,13 +1,14 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Stage2.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/updated.png" type="Texture" id=3]
 [ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
 [ext_resource path="res://assets/skills/doom.png" type="Texture" id=5]
-[ext_resource path="res://assets/skills/freeze.png" type="Texture" id=6]
-[ext_resource path="res://assets/skills/shield.png" type="Texture" id=7]
+[ext_resource path="res://assets/skills-update/freeze.png" type="Texture" id=6]
+[ext_resource path="res://assets/skills-update/freeze-dim.png" type="Texture" id=7]
 [ext_resource path="res://assets/skills-update/frozen_screen(opacity50).png" type="Texture" id=8]
+[ext_resource path="res://assets/skills-update/doom-dim.png" type="Texture" id=9]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 310.25 )
@@ -93,22 +94,13 @@ position = Vector2( 310, -88 )
 wait_time = 300.0
 autostart = true
 
-[node name="Label" type="Label" parent="."]
-margin_left = 390.0
-margin_top = 755.0
-margin_right = 430.0
-margin_bottom = 786.0
-custom_fonts/font = SubResource( 9 )
-text = "1"
-align = 1
-
 [node name="Label2" type="Label" parent="."]
 margin_left = 470.0
 margin_top = 755.0
 margin_right = 510.0
 margin_bottom = 786.0
 custom_fonts/font = SubResource( 9 )
-text = "2"
+text = "1"
 align = 1
 
 [node name="Label3" type="Label" parent="."]
@@ -117,18 +109,18 @@ margin_top = 755.0
 margin_right = 590.0
 margin_bottom = 786.0
 custom_fonts/font = SubResource( 9 )
-text = "3"
+text = "2"
 align = 1
 
-[node name="TextureRect2" type="TextureRect" parent="."]
-margin_left = 370.0
+[node name="TextureRect3" type="TextureRect" parent="."]
+margin_left = 450.0
 margin_top = 685.0
-margin_right = 770.0
+margin_right = 850.0
 margin_bottom = 1085.0
 rect_scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 6 )
 
-[node name="TextureRect3" type="TextureRect" parent="."]
+[node name="TextureRect5" type="TextureRect" parent="."]
 margin_left = 450.0
 margin_top = 685.0
 margin_right = 850.0
@@ -143,6 +135,14 @@ margin_right = 930.0
 margin_bottom = 1085.0
 rect_scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 5 )
+
+[node name="TextureRect6" type="TextureRect" parent="."]
+margin_left = 530.0
+margin_top = 685.0
+margin_right = 930.0
+margin_bottom = 1085.0
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 9 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

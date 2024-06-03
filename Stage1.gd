@@ -85,7 +85,6 @@ func find_new_active_enemy(typed_character: String):
 			return
 
 func _unhandled_input(event: InputEvent) -> void:
-	var enemy = null  # Declare enemy variable outside the loop
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var typed_event = event as InputEventKey
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
@@ -94,35 +93,26 @@ func _unhandled_input(event: InputEvent) -> void:
 			find_new_active_enemy(key_typed)
 		else:
 			var found_enemy = false
-			for e in active_enemies:  # Rename the loop variable to avoid shadowing
-				var prompt = e.get_prompt()
+			for enemy in active_enemies:
+				var prompt = enemy.get_prompt()
 				var next_character = prompt.substr(current_letter_index, 1)
 				if key_typed == next_character:
 					found_enemy = true
 					print("successfully typed %s" % key_typed)
 					current_letter_index += 1
-					e.set_next_character(current_letter_index)
+					enemy.set_next_character(current_letter_index)
 					if current_letter_index == prompt.length():
 						print("done")
 						current_letter_index = -1
-						launch_projectile(e)  # Launch the projectile at the enemy
-						active_enemies.erase(e)
-						completed_enemies.append(e)  # Add the completed enemy to the list
+						launch_projectile(enemy)  # Launch the projectile at the enemy
+						active_enemies.erase(enemy)
+						completed_enemies.append(enemy)  # Add the completed enemy to the list
 						enemies_killed += 1
 						score_value.text = str(enemies_killed)
 					break
 
 			if not found_enemy:
 				print("incorrectly typed %s" % key_typed)
-				# Display message indicating the word was not typed correctly
-				print("Word not typed correctly.")
-				# Move on to the next word
-				current_letter_index = -1
-				active_enemies.clear()
-				find_new_active_enemy(key_typed)
-				# Add the incomplete enemy to the list
-				if enemy:
-					incomplete_enemies.append(enemy)
 
 func _on_SpawnTimer_timeout():
 	spawn_enemy()
