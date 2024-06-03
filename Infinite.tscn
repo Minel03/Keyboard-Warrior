@@ -41,6 +41,11 @@ position = Vector2( 310, 753 )
 scale = Vector2( 0.05, 0.05 )
 texture = ExtResource( 4 )
 
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 310, 753 )
+scale = Vector2( 0.05, 0.05 )
+texture = ExtResource( 4 )
+
 [node name="LoseArea" type="Area2D" parent="."]
 position = Vector2( -1, 304 )
 

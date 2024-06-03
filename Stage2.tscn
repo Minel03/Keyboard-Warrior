@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Stage2.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -7,8 +7,9 @@
 [ext_resource path="res://assets/skills/doom.png" type="Texture" id=5]
 [ext_resource path="res://assets/skills-update/freeze.png" type="Texture" id=6]
 [ext_resource path="res://assets/skills-update/freeze-dim.png" type="Texture" id=7]
-[ext_resource path="res://assets/skills-update/frozen_screen(opacity50).png" type="Texture" id=8]
+[ext_resource path="res://assets/skills-gamedev/frozen_screen(opacity50).png" type="Texture" id=8]
 [ext_resource path="res://assets/skills-update/doom-dim.png" type="Texture" id=9]
+[ext_resource path="res://assets/skills-gamedev/trees-bg.png" type="Texture" id=10]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 310.25 )
@@ -91,8 +92,11 @@ position = Vector2( 310, -88 )
 [node name="BossContainer" type="Node2D" parent="."]
 
 [node name="BossTimer" type="Timer" parent="."]
-wait_time = 300.0
+wait_time = 2.0
 autostart = true
+
+[node name="AfterBoss" type="Timer" parent="."]
+wait_time = 5.0
 
 [node name="Label2" type="Label" parent="."]
 margin_left = 470.0
@@ -145,6 +149,14 @@ rect_scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 9 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+margin_top = -41.0
+margin_right = 1032.0
+margin_bottom = 739.0
+rect_scale = Vector2( 0.6, 0.7 )
+texture = ExtResource( 10 )
+stretch_mode = 1
 
 [node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer"]
 visible = false
@@ -352,6 +364,7 @@ mouse_filter = 2
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
 [connection signal="timeout" from="DifficultyTimer" to="." method="_on_DifficultyTimer_timeout"]
 [connection signal="timeout" from="BossTimer" to="." method="_on_BossTimer_timeout"]
+[connection signal="timeout" from="AfterBoss" to="." method="_on_AfterBoss_timeout"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/PlayAgainButton" to="." method="_on_RestartButton_pressed"]

@@ -3,7 +3,6 @@ extends Node2D
 var Enemy = preload("res://Enemy2.tscn")
 var Boss = preload("res://Boss.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
-var skill_count = 1
 
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
@@ -11,6 +10,7 @@ onready var spawn_timer = $SpawnTimer
 onready var boss_container = $BossContainer
 onready var bossspawn_container = $BossSpawnContainer/Position2D
 onready var boss_timer = $BossTimer
+onready var after_boss = $AfterBoss
 onready var difficulty_timer = $DifficultyTimer
 onready var frozen_effect = $CanvasLayer/VBoxContainer/Frozen_Effect
 onready var frozen_icon = $TextureRect3
@@ -28,6 +28,8 @@ var active_enemies: Array = []
 var completed_enemies: Array = []  # Track completed enemies
 var incomplete_enemies: Array = []  # Track incomplete enemies
 var current_letter_index: int = -1
+var boss_instance = null  # Variable to keep track of the boss instance
+var boss_spawned = false  # Flag to indicate if a boss is spawned
 
 var difficulty: int = 6
 var enemies_killed: int = 0
@@ -40,6 +42,8 @@ var timer_update: Timer = Timer.new()
 func _ready() -> void:
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
+	after_boss.connect("timeout", self, "_on_AfterBoss_timeout")
+
 	start_game()
 
 func update_timer() -> void:
@@ -136,6 +140,8 @@ func _on_SpawnTimer_timeout():
 	spawn_enemy()
 
 func spawn_enemy():
+	if boss_spawned:
+		return  # Do not spawn enemies if a boss is spawned
 	var enemy_instance = Enemy.instance()
 	var spawns = spawn_container.get_children()
 	var index = randi() % spawns.size()
@@ -153,10 +159,13 @@ func spawn_enemy():
 		print("No animations found in AnimationPlayer.")
 
 func spawn_boss():
-	var boss_instance = Boss.instance()
-	var boss_spawn_point = bossspawn_container.global_position  # Get the global position of the spawn point
-	boss_instance.global_position = boss_spawn_point  # Set the boss's position to the spawn point
-	boss_container.add_child(boss_instance)
+	if boss_instance == null or not boss_instance.is_inside_tree():
+		boss_instance = Boss.instance()
+		var boss_spawn_point = bossspawn_container.global_position  # Get the global position of the spawn point
+		boss_instance.global_position = boss_spawn_point  # Set the boss's position to the spawn point
+		boss_container.add_child(boss_instance)
+		boss_spawned = true  # Set the flag to true when a boss is spawned
+		after_boss.start(5)  # Start the timer for 5 seconds
 
 func _on_DifficultyTimer_timeout():
 	if difficulty >= 20:
@@ -248,9 +257,8 @@ func freeze():
 		yield(get_tree().create_timer(2.0), "timeout")
 
 func remove_random_enemies(count: int):
-	if skillpoint >= 1 and skill_count >= 1:
+	if skillpoint >= 1:
 		skillpoint -= 1
-		skill_count -= 1
 		update_skill_point_label()
 		print("Skill points after removing enemies: %d" % skillpoint)  # Debugging print
 	var enemies = enemy_container.get_children()
@@ -265,3 +273,6 @@ func launch_projectile(target):
 
 func _on_BossTimer_timeout():
 	spawn_boss()
+
+func _on_AfterBoss_timeout():
+	spawn_enemy()

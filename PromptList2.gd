@@ -1,6 +1,5 @@
 extends Node
 
-#List from here https://www.dictionary.com/learn/word-lists/general/H23wqeCDqyg
 var words = [
 	"Canary", 
 	"Postgraduate",
