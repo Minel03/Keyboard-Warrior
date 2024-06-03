@@ -1,12 +1,13 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Stage2.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://assets/Area/Day.png" type="Texture" id=3]
+[ext_resource path="res://assets/updated.png" type="Texture" id=3]
 [ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
 [ext_resource path="res://assets/skills/doom.png" type="Texture" id=5]
 [ext_resource path="res://assets/skills/freeze.png" type="Texture" id=6]
 [ext_resource path="res://assets/skills/shield.png" type="Texture" id=7]
+[ext_resource path="res://assets/skills-update/frozen_screen(opacity50).png" type="Texture" id=8]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 310.25 )
@@ -235,6 +236,12 @@ text = "STAGE MENU"
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+
+[node name="Frozen_Effect" type="TextureRect" parent="CanvasLayer/VBoxContainer"]
+visible = false
+margin_right = 620.0
+margin_bottom = 785.0
+texture = ExtResource( 8 )
 
 [node name="TopRowLeft" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_right = 620.0

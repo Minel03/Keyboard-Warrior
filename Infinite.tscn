@@ -1,15 +1,19 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Stage1.gd" type="Script" id=1]
+[ext_resource path="res://Infinite.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://assets/Area/Day.png" type="Texture" id=3]
+[ext_resource path="res://assets/updated.png" type="Texture" id=3]
 [ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 310 )
 
-[sub_resource type="DynamicFont" id=3]
-size = 48
+[sub_resource type="DynamicFont" id=5]
+size = 36
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 36
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=4]
@@ -77,27 +81,13 @@ autostart = true
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-<<<<<<< Updated upstream:Synonym.tscn
-=======
 margin_left = -11.0
 margin_right = 6.0
 margin_bottom = 4.0
->>>>>>> Stashed changes:Infinite.tscn
 
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/GameOverScreen"]
 margin_left = 7.0
 margin_top = 7.0
-<<<<<<< Updated upstream:Synonym.tscn
-margin_right = 353.0
-margin_bottom = 593.0
-mouse_filter = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer"]
-margin_left = 57.0
-margin_top = 147.0
-margin_right = 289.0
-margin_bottom = 439.0
-=======
 margin_right = 630.0
 margin_bottom = 782.0
 mouse_filter = 1
@@ -107,28 +97,71 @@ margin_left = 195.0
 margin_top = 146.0
 margin_right = 427.0
 margin_bottom = 628.0
->>>>>>> Stashed changes:Infinite.tscn
 custom_constants/separation = 50
 
-[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
+[node name="TopRowLeft" type="HBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
 margin_right = 232.0
-margin_bottom = 72.0
-custom_fonts/font = SubResource( 3 )
-text = "YOU LOST"
+margin_bottom = 54.0
 
-[node name="RestartButton" type="Button" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
-margin_top = 122.0
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft"]
+margin_right = 132.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 5 )
+text = "Score:"
+
+[node name="ScoreValue" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft"]
+margin_left = 136.0
+margin_right = 136.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 6 )
+
+[node name="TopRowLeft2" type="HBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
+margin_top = 104.0
 margin_right = 232.0
-margin_bottom = 182.0
+margin_bottom = 158.0
+
+[node name="AccuracyLabel" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft2"]
+margin_right = 198.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 5 )
+text = "Accuracy:"
+
+[node name="AccuracyValue" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft2"]
+margin_left = 202.0
+margin_right = 202.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 6 )
+
+[node name="TopRowLeft3" type="HBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
+margin_top = 208.0
+margin_right = 232.0
+margin_bottom = 262.0
+
+[node name="WordsLabel" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft3"]
+margin_right = 132.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 5 )
+text = "Words:"
+
+[node name="WordsValue" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft3"]
+margin_left = 136.0
+margin_right = 136.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 6 )
+
+[node name="Restart" type="Button" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
+margin_top = 312.0
+margin_right = 232.0
+margin_bottom = 372.0
 custom_fonts/font = SubResource( 4 )
-text = "RESTART"
+text = "PLAY AGAIN"
 
 [node name="MenuButton" type="Button" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
-margin_top = 232.0
+margin_top = 422.0
 margin_right = 232.0
-margin_bottom = 292.0
+margin_bottom = 482.0
 custom_fonts/font = SubResource( 4 )
-text = "MENU"
+text = "STAGE MENU"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
 anchor_right = 1.0
@@ -154,11 +187,7 @@ text = "0"
 
 [node name="TopRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/TopRowLeft"]
 margin_left = 113.0
-<<<<<<< Updated upstream:Synonym.tscn
-margin_right = 342.0
-=======
 margin_right = 598.0
->>>>>>> Stashed changes:Infinite.tscn
 margin_bottom = 38.0
 mouse_filter = 2
 
@@ -170,12 +199,9 @@ text = "        Timer:"
 
 [node name="TimerValue" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
 margin_left = 214.0
-margin_right = 229.0
+margin_right = 289.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
-<<<<<<< Updated upstream:Synonym.tscn
-text = "0"
-=======
 text = "00:00"
 
 [node name="TimerValue2" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
@@ -190,7 +216,6 @@ margin_left = 432.0
 margin_right = 485.0
 margin_bottom = 38.0
 text = "PAUSE"
->>>>>>> Stashed changes:Infinite.tscn
 
 [node name="TopRowLeft2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_top = 42.0
@@ -217,73 +242,30 @@ text = "0"
 
 [node name="MiddleRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_top = 84.0
-<<<<<<< Updated upstream:Synonym.tscn
-margin_right = 560.0
-margin_bottom = 505.0
-=======
 margin_right = 620.0
 margin_bottom = 430.0
->>>>>>> Stashed changes:Infinite.tscn
 mouse_filter = 2
 size_flags_vertical = 3
 
 [node name="MiddleRow2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-<<<<<<< Updated upstream:Synonym.tscn
-margin_top = 509.0
-margin_right = 560.0
-margin_bottom = 931.0
-=======
 margin_top = 434.0
 margin_right = 620.0
 margin_bottom = 781.0
->>>>>>> Stashed changes:Infinite.tscn
 mouse_filter = 2
 size_flags_vertical = 3
 
 [node name="BottomRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-<<<<<<< Updated upstream:Synonym.tscn
-margin_top = 935.0
-margin_right = 560.0
-margin_bottom = 935.0
-=======
 margin_top = 785.0
 margin_right = 620.0
 margin_bottom = 785.0
->>>>>>> Stashed changes:Infinite.tscn
 mouse_filter = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/BottomRow"]
 mouse_filter = 2
 
-<<<<<<< Updated upstream:Synonym.tscn
-=======
-[node name="Life1" type="TextureRect" parent="."]
-margin_left = 3.0
-margin_top = 741.0
-margin_right = 1083.0
-margin_bottom = 1821.0
-rect_scale = Vector2( 0.04, 0.04 )
-texture = ExtResource( 5 )
-
-[node name="Life2" type="TextureRect" parent="."]
-margin_left = 53.0
-margin_top = 741.0
-margin_right = 1133.0
-margin_bottom = 1821.0
-rect_scale = Vector2( 0.04, 0.04 )
-texture = ExtResource( 5 )
-
-[node name="Life3" type="TextureRect" parent="."]
-margin_left = 103.0
-margin_top = 741.0
-margin_right = 1183.0
-margin_bottom = 1821.0
-rect_scale = Vector2( 0.04, 0.04 )
-texture = ExtResource( 5 )
-
->>>>>>> Stashed changes:Infinite.tscn
 [connection signal="body_entered" from="LoseArea" to="." method="_on_LoseArea_body_entered"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
 [connection signal="timeout" from="DifficultyTimer" to="." method="_on_DifficultyTimer_timeout"]
-[connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/RestartButton" to="." method="_on_RestartButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/Restart" to="." method="_on_Restart_pressed"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/TopRowLeft/TopRow/PauseButton" to="." method="_on_PauseButton_pressed"]

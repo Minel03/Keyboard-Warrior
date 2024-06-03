@@ -4,7 +4,6 @@ var Enemy = preload("res://Enemy2.tscn")
 var Boss = preload("res://Boss.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
-
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
@@ -12,82 +11,135 @@ onready var boss_container = $BossContainer
 onready var bossspawn_container = $BossSpawnContainer/Position2D
 onready var boss_timer = $BossTimer
 onready var difficulty_timer = $DifficultyTimer
+onready var frozen_effect = $CanvasLayer/VBoxContainer/Frozen_Effect
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
-<<<<<<< Updated upstream:Synonym.gd
-=======
 onready var skill_point_label = $CanvasLayer/VBoxContainer/TopRow3/SPValue
 onready var label = $CanvasLayer/VBoxContainer
->>>>>>> Stashed changes:Stage2.gd
 onready var game_over_screen = $CanvasLayer/GameOverScreen
+onready var winner_screen = $CanvasLayer/CompleteScreen
+onready var timer_label = $CanvasLayer/VBoxContainer/TopRowLeft/TopRow/TimerValue
 
-var active_enemy = null
+var active_enemies: Array = []
 var completed_enemies: Array = []  # Track completed enemies
+var incomplete_enemies: Array = []  # Track incomplete enemies
 var current_letter_index: int = -1
 
-var difficulty: int = 0
+var difficulty: int = 6
 var enemies_killed: int = 0
 var skillpoint: int = 0
 
+var game_duration_seconds: int = 0
+var timer_running: bool = false
+var timer_update: Timer = Timer.new()
+
+var barrier_health: int = 0
+var barrier_active: bool = false
 
 func _ready() -> void:
+	add_child(timer_update)
+	timer_update.connect("timeout", self, "update_timer")
 	start_game()
 
+func update_timer() -> void:
+	if timer_running:
+		game_duration_seconds += 1
+		var minutes = game_duration_seconds / 60
+		var seconds = game_duration_seconds % 60
+		timer_label.text = "%02d:%02d" % [minutes, seconds]
+		if minutes >= 10:
+			winner_screen.show()
+			label.hide()
+			spawn_timer.stop()
+			difficulty_timer.stop()
+			stop_timer()
+
+func start_timer() -> void:
+	game_duration_seconds = 0
+	timer_running = true
+
+func stop_timer() -> void:
+	timer_running = false
 
 func find_new_active_enemy(typed_character: String):
+	# Clear any previous active enemies
+	active_enemies.clear()
+
 	for enemy in enemy_container.get_children():
+		if enemy == null or enemy in completed_enemies:
+			continue
+		
+		# Check if the enemy has been removed from the scene
+		if enemy.get_parent() == null:
+			continue
+
+		# Check if the enemy has the method `get_prompt`
+		if not enemy.has_method("get_prompt"):
+			continue
+		
 		var prompt = enemy.get_prompt()
+		if prompt == null:
+			continue
+
 		var next_character = prompt.substr(0, 1)
 		if next_character == typed_character:
 			print("found new enemy that starts with %s" % next_character)
-			active_enemy = enemy
-			current_letter_index = 1
-			active_enemy.set_next_character(current_letter_index)
+			active_enemies.append(enemy)
+			current_letter_index = 1  # Reset the typing state
+			enemy.set_next_character(current_letter_index)
 			return
 
-
 func _unhandled_input(event: InputEvent) -> void:
+	var enemy = null  # Declare enemy variable outside the loop
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var typed_event = event as InputEventKey
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
-		
-<<<<<<< Updated upstream:Synonym.gd
-=======
+
 		# Check for the '1' key press to activate freeze()
 		if typed_event.scancode == KEY_1:
 			freeze()
 			return
-		elif typed_event.scancode == KEY_2:
-			place_barrier(5)
-			return
 		elif typed_event.scancode == KEY_3:
 			remove_random_enemies(5)
-		
->>>>>>> Stashed changes:Stage2.gd
-		if active_enemy == null:
+
+		if active_enemies.empty():
 			find_new_active_enemy(key_typed)
 		else:
-			var prompt = active_enemy.get_prompt()
-			var next_character = prompt.substr(current_letter_index, 1)
-			if key_typed == next_character:
-				print("successfully typed %s" % key_typed)
-				current_letter_index += 1
-				active_enemy.set_next_character(current_letter_index)
-				if current_letter_index == prompt.length():
-					print("done")
-					current_letter_index = -1
-					launch_projectile(active_enemy)  # Launch the projectile at the enemy
-					active_enemy = null
-					enemies_killed += 1
-					score_value.text = str(enemies_killed)
-			else:
-				print("incorrectly typed %s instead of %s" % [key_typed, next_character])
+			var found_enemy = false
+			for e in active_enemies:  # Rename the loop variable to avoid shadowing
+				var prompt = e.get_prompt()
+				var next_character = prompt.substr(current_letter_index, 1)
+				if key_typed == next_character:
+					found_enemy = true
+					print("successfully typed %s" % key_typed)
+					current_letter_index += 1
+					e.set_next_character(current_letter_index)
+					if current_letter_index == prompt.length():
+						print("done")
+						current_letter_index = -1
+						launch_projectile(e)  # Launch the projectile at the enemy
+						active_enemies.erase(e)
+						completed_enemies.append(e)  # Add the completed enemy to the list
+						enemies_killed += 1
+						score_value.text = str(enemies_killed)
+					break
+
+			if not found_enemy:
+				print("incorrectly typed %s" % key_typed)
+				# Display message indicating the word was not typed correctly
+				print("Word not typed correctly.")
+				# Move on to the next word
+				current_letter_index = -1
+				active_enemies.clear()
+				find_new_active_enemy(key_typed)
+				# Add the incomplete enemy to the list
+				if enemy:
+					incomplete_enemies.append(enemy)
 
 
 func _on_SpawnTimer_timeout():
 	spawn_enemy()
-
 
 func spawn_enemy():
 	var enemy_instance = Enemy.instance()
@@ -95,7 +147,16 @@ func spawn_enemy():
 	var index = randi() % spawns.size()
 	enemy_instance.global_position = spawns[index].global_position
 	enemy_container.add_child(enemy_instance)
-	enemy_instance.set_difficuty(difficulty)
+	enemy_instance.set_difficulty(difficulty)
+	
+	var animation_player = enemy_instance.animation
+	var animation_list = animation_player.get_animation_list()
+	if animation_list.size() > 0:
+		var random_animation_index = randi() % animation_list.size()
+		var random_animation_name = animation_list[random_animation_index]
+		animation_player.play(random_animation_name)
+	else:
+		print("No animations found in AnimationPlayer.")
 
 func spawn_boss():
 	var boss_instance = Boss.instance()
@@ -108,7 +169,7 @@ func _on_DifficultyTimer_timeout():
 		difficulty_timer.stop()
 		difficulty = 20
 		return
-	
+
 	difficulty += 1
 	GlobalSignals.emit_signal("difficulty_increased", difficulty)
 	print("Difficulty increased to %d" % difficulty)
@@ -116,56 +177,55 @@ func _on_DifficultyTimer_timeout():
 	spawn_timer.wait_time = clamp(new_wait_time, 1, spawn_timer.wait_time)
 	difficulty_value.text = str(difficulty)
 
-
 func _on_LoseArea_body_entered(body: Node) -> void:
-	game_over()
-
+	if barrier_active:
+		barrier_health -= 1
+		if barrier_health <= 0:
+			barrier_active = false
+		body.queue_free()
+	else:
+		game_over()
 
 func game_over():
+	frozen_effect.hide()
 	game_over_screen.show()
+	label.hide()
 	spawn_timer.stop()
 	boss_timer.stop()
 	difficulty_timer.stop()
-	active_enemy = null
+	stop_timer()
+	for enemy in enemy_container.get_children():
+		enemy.queue_free()
 	current_letter_index = -1
 	for enemy in enemy_container.get_children():
 		enemy.queue_free()
-
+	current_letter_index = -1
 
 func start_game():
 	game_over_screen.hide()
-<<<<<<< Updated upstream:Synonym.gd
-	difficulty = 0
-=======
 	winner_screen.hide()
-	skillpoint = 10
+	skillpoint = 2
 	difficulty = 6
->>>>>>> Stashed changes:Stage2.gd
 	enemies_killed = 0
-	difficulty_value.text = str(0)
+	difficulty_value.text = str(difficulty)
 	score_value.text = str(0)
 	update_skill_point_label()  # Update skill point label at start
 	randomize()
 	spawn_timer.start()
 	boss_timer.start()
 	difficulty_timer.start()
+	start_timer()
+	timer_update.start(1)
 	spawn_enemy()
 
-<<<<<<< Updated upstream:Synonym.gd
-=======
 func update_skill_point_label():
 	print("Updating skill point label to %d" % skillpoint)  # Debugging print
 	skill_point_label.text = str(skillpoint)
->>>>>>> Stashed changes:Stage2.gd
 
 func _on_RestartButton_pressed():
-	start_game()
-
+	get_tree().change_scene("res://Stage2.tscn")
 
 func _on_MenuButton_pressed():
-<<<<<<< Updated upstream:Synonym.gd
-	get_tree().change_scene("res://MainMenu.tscn")
-=======
 	get_tree().change_scene("res://StageMenu.tscn")
 
 var pause_scene = preload("res://Pause.tscn")
@@ -180,30 +240,28 @@ func _on_PauseButton_pressed():
 	pause_instance.set_process_input(true)
 
 func freeze():
-	if skillpoint >= 3:
-		skillpoint -= 3
+	if skillpoint >= 1:
+		skillpoint -= 1
 		update_skill_point_label()
 		print("Skill points after using freeze: %d" % skillpoint)  # Debugging print
+
 		# Freeze enemies for 3 seconds
 		for enemy in enemy_container.get_children():
 			enemy.freeze()  # Call a freeze method on the enemy script
+
+		frozen_effect.show()
 		yield(get_tree().create_timer(3.0), "timeout")
+		frozen_effect.hide()
+
 		# Slow down enemies for 2 seconds
 		for enemy in enemy_container.get_children():
 			enemy.slow_down()  # Call a slow_down method on the enemy script
+
 		yield(get_tree().create_timer(2.0), "timeout")
 
-func place_barrier(health: int):
-	if skillpoint >= 3:
-		skillpoint -= 3
-		update_skill_point_label()
-		print("Skill points after placing barrier: %d" % skillpoint)  # Debugging print
-		barrier_health = health
-		barrier_active = true
-
 func remove_random_enemies(count: int):
-	if skillpoint >= 4:
-		skillpoint -= 4
+	if skillpoint >= 1:
+		skillpoint -= 1
 		update_skill_point_label()
 		print("Skill points after removing enemies: %d" % skillpoint)  # Debugging print
 	var enemies = enemy_container.get_children()
@@ -218,4 +276,3 @@ func launch_projectile(target):
 
 func _on_BossTimer_timeout():
 	spawn_boss()
->>>>>>> Stashed changes:Stage2.gd

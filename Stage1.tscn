@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Stage1.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://assets/Area/Day.png" type="Texture" id=3]
+[ext_resource path="res://assets/updated.png" type="Texture" id=3]
 [ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
 
 [sub_resource type="RectangleShape2D" id=2]
@@ -83,17 +83,6 @@ margin_bottom = 4.0
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/GameOverScreen"]
 margin_left = 7.0
 margin_top = 7.0
-<<<<<<< Updated upstream
-margin_right = 570.0
-margin_bottom = 928.0
-mouse_filter = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverScreen/CenterContainer"]
-margin_left = 165.0
-margin_top = 314.0
-margin_right = 397.0
-margin_bottom = 606.0
-=======
 margin_right = 630.0
 margin_bottom = 782.0
 mouse_filter = 1
@@ -103,7 +92,6 @@ margin_left = 195.0
 margin_top = 241.0
 margin_right = 427.0
 margin_bottom = 533.0
->>>>>>> Stashed changes
 custom_constants/separation = 50
 
 [node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer"]
@@ -127,6 +115,7 @@ custom_fonts/font = SubResource( 4 )
 text = "STAGE MENU"
 
 [node name="CompleteScreen" type="PanelContainer" parent="CanvasLayer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -11.0
@@ -136,13 +125,8 @@ margin_bottom = 6.0
 [node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/CompleteScreen"]
 margin_left = 7.0
 margin_top = 7.0
-<<<<<<< Updated upstream
-margin_right = 570.0
-margin_bottom = 928.0
-=======
 margin_right = 630.0
 margin_bottom = 784.0
->>>>>>> Stashed changes
 mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/CompleteScreen/CenterContainer"]
@@ -200,11 +184,7 @@ text = "0"
 
 [node name="TopRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/TopRowLeft"]
 margin_left = 113.0
-<<<<<<< Updated upstream
-margin_right = 327.0
-=======
 margin_right = 598.0
->>>>>>> Stashed changes
 margin_bottom = 38.0
 mouse_filter = 2
 
@@ -216,11 +196,9 @@ text = "        Timer:"
 
 [node name="TimerValue" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
 margin_left = 214.0
-margin_right = 214.0
+margin_right = 289.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
-<<<<<<< Updated upstream
-=======
 text = "00:00"
 
 [node name="TimerValue2" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
@@ -235,7 +213,6 @@ margin_left = 432.0
 margin_right = 485.0
 margin_bottom = 38.0
 text = "PAUSE"
->>>>>>> Stashed changes
 
 [node name="TopRowLeft2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_top = 42.0
@@ -260,32 +237,6 @@ margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "0"
 
-<<<<<<< Updated upstream
-[node name="MiddleRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-margin_top = 84.0
-margin_right = 560.0
-margin_bottom = 505.0
-mouse_filter = 2
-size_flags_vertical = 3
-
-[node name="MiddleRow2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-margin_top = 509.0
-margin_right = 560.0
-margin_bottom = 931.0
-mouse_filter = 2
-size_flags_vertical = 3
-
-[node name="BottomRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
-margin_top = 935.0
-margin_right = 560.0
-margin_bottom = 935.0
-mouse_filter = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/BottomRow"]
-mouse_filter = 2
-
-=======
->>>>>>> Stashed changes
 [connection signal="body_entered" from="LoseArea" to="." method="_on_LoseArea_body_entered"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
 [connection signal="timeout" from="DifficultyTimer" to="." method="_on_DifficultyTimer_timeout"]
@@ -293,3 +244,4 @@ mouse_filter = 2
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/PlayAgainButton" to="." method="_on_RestartButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/TopRowLeft/TopRow/PauseButton" to="." method="_on_PauseButton_pressed"]

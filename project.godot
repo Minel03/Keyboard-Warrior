@@ -18,13 +18,6 @@ config/icon="res://icon.png"
 
 PromptList="*res://PromptList.gd"
 GlobalSignals="*res://GlobalSignals.gd"
-<<<<<<< Updated upstream
-
-[display]
-
-window/size/width=560
-window/size/height=935
-=======
 Bgm="*res://bgm.tscn"
 ClickSound="*res://ClickSound.tscn"
 InfinitePromptList="*res://InfinitePromptList.gd"
@@ -35,7 +28,6 @@ PromptList2="*res://PromptList2.gd"
 window/size/width=620
 window/size/height=785
 window/handheld/orientation="portrait"
->>>>>>> Stashed changes
 
 [global]
 
