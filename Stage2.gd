@@ -15,6 +15,8 @@ onready var difficulty_timer = $DifficultyTimer
 onready var frozen_effect = $CanvasLayer/VBoxContainer/Frozen_Effect
 onready var frozen_icon = $TextureRect3
 onready var doom_icon = $TextureRect4
+onready var _animated_sprite = $AnimatedSprite
+onready var attack_timer = $AttackTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
@@ -36,10 +38,18 @@ var skillpoint: int = 0
 var game_duration_seconds: int = 0
 var timer_running: bool = false
 var timer_update: Timer = Timer.new()
+var launch_projectile_flag = false
+
+func _process(delta):
+	if launch_projectile_flag:
+		_animated_sprite.play("attack")
+	else:
+		_animated_sprite.play("idle")
 
 func _ready() -> void:
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
+	attack_timer.connect("timeout", self, "_on_attack_timer_timeout")
 	start_game()
 
 func update_timer() -> void:
@@ -206,6 +216,9 @@ func start_game():
 	timer_update.start(1)
 	spawn_enemy()
 
+func _on_attack_timer_timeout():
+	launch_projectile_flag = false
+	
 func update_skill_point_label():
 	print("Updating skill point label to %d" % skillpoint)  # Debugging print
 	skill_point_label.text = str(skillpoint)
@@ -262,6 +275,8 @@ func launch_projectile(target):
 	projectile_instance.global_position = Vector2(309, 752)
 	add_child(projectile_instance)
 	projectile_instance.target = target
+	launch_projectile_flag = true
+	attack_timer.start(0.7)
 
 func _on_BossTimer_timeout():
 	spawn_boss()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Stage2.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -9,6 +9,22 @@
 [ext_resource path="res://assets/skills-update/freeze-dim.png" type="Texture" id=7]
 [ext_resource path="res://assets/skills-update/frozen_screen(opacity50).png" type="Texture" id=8]
 [ext_resource path="res://assets/skills-update/doom-dim.png" type="Texture" id=9]
+[ext_resource path="res://assets/SPRITES/Hero/idle-2.png" type="Texture" id=10]
+[ext_resource path="res://assets/SPRITES/Hero/attack.png" type="Texture" id=11]
+[ext_resource path="res://assets/SPRITES/Hero/idle-1.png" type="Texture" id=12]
+
+[sub_resource type="SpriteFrames" id=10]
+animations = [ {
+"frames": [ ExtResource( 11 ) ],
+"loop": false,
+"name": "attack",
+"speed": 1.0
+}, {
+"frames": [ ExtResource( 12 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+} ]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 310.25 )
@@ -44,7 +60,16 @@ texture = ExtResource( 3 )
 expand = true
 stretch_mode = 1
 
+[node name="AttackTimer" type="Timer" parent="."]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 310, 741 )
+scale = Vector2( 0.05, 0.05 )
+frames = SubResource( 10 )
+animation = "attack"
+
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 position = Vector2( 309, 752 )
 scale = Vector2( 0.05, 0.05 )
 texture = ExtResource( 4 )

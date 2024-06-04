@@ -1,9 +1,25 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Stage1.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/updated.png" type="Texture" id=3]
 [ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
+[ext_resource path="res://assets/SPRITES/Hero/idle-2.png" type="Texture" id=5]
+[ext_resource path="res://assets/SPRITES/Hero/idle-1.png" type="Texture" id=6]
+[ext_resource path="res://assets/SPRITES/Hero/attack.png" type="Texture" id=7]
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 7 ) ],
+"loop": false,
+"name": "attack",
+"speed": 1.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+} ]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 309 )
@@ -31,7 +47,16 @@ texture = ExtResource( 3 )
 expand = true
 stretch_mode = 1
 
+[node name="AttackTimer" type="Timer" parent="."]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 310, 740 )
+scale = Vector2( 0.05, 0.05 )
+frames = SubResource( 5 )
+animation = "attack"
+
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 position = Vector2( 310, 752 )
 scale = Vector2( 0.05, 0.05 )
 texture = ExtResource( 4 )

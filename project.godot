@@ -27,6 +27,7 @@ PromptList2="*res://PromptList2.gd"
 
 window/size/width=620
 window/size/height=785
+window/size/fullscreen=true
 window/handheld/orientation="portrait"
 
 [global]

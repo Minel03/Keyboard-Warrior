@@ -7,6 +7,8 @@ onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
 onready var difficulty_timer = $DifficultyTimer
+onready var _animated_sprite = $AnimatedSprite
+onready var attack_timer = $AttackTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
@@ -36,10 +38,18 @@ var life: int = 3
 var game_duration_seconds: int = 0
 var timer_running: bool = false
 var timer_update: Timer = Timer.new()
+var launch_projectile_flag = false
+
+func _process(delta):
+	if launch_projectile_flag:
+		_animated_sprite.play("attack")
+	else:
+		_animated_sprite.play("idle")
 
 func _ready() -> void:
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
+	attack_timer.connect("timeout", self, "_on_attack_timer_timeout")
 	start_game()
 
 func update_timer() -> void:
@@ -220,11 +230,16 @@ func _on_MenuButton_pressed():
 var pause_scene = preload("res://Pause.tscn")
 onready var Click_sound = get_node("/root/ClickSound")
 
+func _on_attack_timer_timeout():
+	launch_projectile_flag = false
+
 func launch_projectile(target):
 	var projectile_instance = Projectile.instance()
 	projectile_instance.global_position = Vector2(309, 752)
 	add_child(projectile_instance)
 	projectile_instance.target = target
+	launch_projectile_flag = true
+	attack_timer.start(0.7)
 
 func _on_PauseButton_pressed():
 	Click_sound.play()
