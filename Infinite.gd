@@ -7,6 +7,8 @@ onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
 onready var difficulty_timer = $DifficultyTimer
+onready var hero = $Hero
+onready var attack_timer = $AttackTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
@@ -36,6 +38,14 @@ var life: int = 3
 var game_duration_seconds: int = 0
 var timer_running: bool = false
 var timer_update: Timer = Timer.new()
+
+var launch_projectile_flag = false
+
+func _process(delta):
+	if launch_projectile_flag:
+		hero.play("attack")
+	else:
+		hero.play("idle")
 
 func _ready() -> void:
 	add_child(timer_update)
@@ -99,20 +109,24 @@ func _unhandled_input(event: InputEvent) -> void:
 				if key_typed == next_character:
 					found_enemy = true
 					print("successfully typed %s" % key_typed)
+					correct_keystrokes += 1
 					current_letter_index += 1
 					enemy.set_next_character(current_letter_index)
 					if current_letter_index == prompt.length():
 						print("done")
 						current_letter_index = -1
+						correct_words.append(prompt)  # Track correctly typed words
 						launch_projectile(enemy)  # Launch the projectile at the enemy
 						active_enemies.erase(enemy)
 						completed_enemies.append(enemy)  # Add the completed enemy to the list
+						
 						enemies_killed += 1
 						score_value.text = str(enemies_killed)
 					break
 
 			if not found_enemy:
 				print("incorrectly typed %s" % key_typed)
+				incorrect_keystrokes += 1
 
 func _on_SpawnTimer_timeout():
 	spawn_enemy()
@@ -200,6 +214,7 @@ func game_over():
 	update_score_label()  # Update the score label
 
 func start_game():
+	hero.play("idle")
 	game_over_screen.hide()
 	difficulty = 0
 	enemies_killed = 0
@@ -225,6 +240,11 @@ func launch_projectile(target):
 	projectile_instance.global_position = Vector2(309, 752)
 	add_child(projectile_instance)
 	projectile_instance.target = target
+	launch_projectile_flag = true
+	attack_timer.start(0.7)
+
+func _on_attack_timer_timeout():
+	launch_projectile_flag = false
 
 func _on_PauseButton_pressed():
 	Click_sound.play()

@@ -1,9 +1,25 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Stage1.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://assets/updated.png" type="Texture" id=3]
-[ext_resource path="res://assets/SPRITES/Hero/Idle.png" type="Texture" id=4]
+[ext_resource path="res://assets/SPRITES/Hero/idle-1.png" type="Texture" id=4]
+[ext_resource path="res://assets/skills-gamedev/trees-bg.png" type="Texture" id=5]
+[ext_resource path="res://assets/SPRITES/Hero/attack.png" type="Texture" id=6]
+[ext_resource path="res://assets/SPRITES/Hero/idle-2.png" type="Texture" id=7]
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 6 ) ],
+"loop": false,
+"name": "attack",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+} ]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 26.9993, 309 )
@@ -31,10 +47,14 @@ texture = ExtResource( 3 )
 expand = true
 stretch_mode = 1
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 310, 752 )
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.7
+
+[node name="Hero" type="AnimatedSprite" parent="."]
+position = Vector2( 309, 753 )
 scale = Vector2( 0.05, 0.05 )
-texture = ExtResource( 4 )
+frames = SubResource( 5 )
+animation = "attack"
 
 [node name="LoseArea" type="Area2D" parent="."]
 position = Vector2( -1, 304 )
@@ -69,6 +89,14 @@ wait_time = 4.0
 [node name="DifficultyTimer" type="Timer" parent="."]
 wait_time = 60.0
 autostart = true
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+margin_top = -41.0
+margin_right = 1033.0
+margin_bottom = 739.0
+rect_scale = Vector2( 0.6, 0.7 )
+texture = ExtResource( 5 )
+stretch_mode = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -237,6 +265,7 @@ margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "0"
 
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
 [connection signal="body_entered" from="LoseArea" to="." method="_on_LoseArea_body_entered"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_SpawnTimer_timeout"]
 [connection signal="timeout" from="DifficultyTimer" to="." method="_on_DifficultyTimer_timeout"]

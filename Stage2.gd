@@ -10,11 +10,20 @@ onready var spawn_timer = $SpawnTimer
 onready var boss_container = $BossContainer
 onready var bossspawn_container = $BossSpawnContainer/Position2D
 onready var boss_timer = $BossTimer
+onready var bossenemy_container = $BossEnemyContainer
 onready var after_boss = $AfterBoss
 onready var difficulty_timer = $DifficultyTimer
 onready var frozen_effect = $CanvasLayer/VBoxContainer/Frozen_Effect
 onready var frozen_icon = $TextureRect3
 onready var doom_icon = $TextureRect4
+onready var portal1 = $Portal
+onready var portal2 = $Portal2
+onready var portal3 = $Portal3
+onready var portal4 = $Portal4
+onready var doomskill = $Doom
+onready var hero = $Hero
+onready var bossskill = $BossSkill
+onready var attack_timer = $AttackTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
@@ -31,6 +40,8 @@ var current_letter_index: int = -1
 var boss_instance = null  # Variable to keep track of the boss instance
 var boss_spawned = false  # Flag to indicate if a boss is spawned
 
+
+var current_spawn_index: int = 0
 var difficulty: int = 6
 var enemies_killed: int = 0
 var skillpoint: int = 0
@@ -39,11 +50,21 @@ var game_duration_seconds: int = 0
 var timer_running: bool = false
 var timer_update: Timer = Timer.new()
 
+var launch_projectile_flag = false
+
+func _process(delta):
+	if launch_projectile_flag:
+		hero.play("attack")
+	else:
+		hero.play("idle")
+	if skillpoint == 0:
+		frozen_icon.hide()
+		doom_icon.hide()
+
 func _ready() -> void:
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
 	after_boss.connect("timeout", self, "_on_AfterBoss_timeout")
-
 	start_game()
 
 func update_timer() -> void:
@@ -58,6 +79,15 @@ func update_timer() -> void:
 			spawn_timer.stop()
 			difficulty_timer.stop()
 			stop_timer()
+		if minutes == 7 and seconds == 45:
+			toggle_bossskill_visibility()
+		if minutes == 9 and seconds == 50:
+			spawn_bossenemy().stop()
+			launch_projectile(boss_instance)
+			portal1.hide()
+			portal2.hide()
+			portal3.hide()
+			portal4.hide()
 
 func start_timer() -> void:
 	game_duration_seconds = 0
@@ -100,11 +130,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
 		
 		# Check for the '1' key press to activate freeze()
-		if typed_event.scancode == KEY_1:
+		if typed_event.scancode == KEY_1 and skillpoint >= 1:
+			skillpoint -= 1
+			update_skill_point_label()
 			freeze()
 			return
-		elif typed_event.scancode == KEY_2:
+		elif typed_event.scancode == KEY_2 and skillpoint >= 1:
+			skillpoint -= 1
+			update_skill_point_label()
 			remove_random_enemies(5)
+			return
 		
 		frozen_icon.hide()
 		doom_icon.hide()
@@ -159,7 +194,7 @@ func spawn_enemy():
 		print("No animations found in AnimationPlayer.")
 
 func spawn_boss():
-	if boss_instance == null or not boss_instance.is_inside_tree():
+	if boss_instance == null:
 		boss_instance = Boss.instance()
 		var boss_spawn_point = bossspawn_container.global_position  # Get the global position of the spawn point
 		boss_instance.global_position = boss_spawn_point  # Set the boss's position to the spawn point
@@ -167,10 +202,33 @@ func spawn_boss():
 		boss_spawned = true  # Set the flag to true when a boss is spawned
 		after_boss.start(5)  # Start the timer for 5 seconds
 
+func spawn_bossenemy():
+	var bossenemy_instance = Enemy.instance()
+	var bossenemy_spawn = bossenemy_container.get_children()
+
+	# Ensure the index is within the bounds of the spawns array (0 to 3)
+	current_spawn_index = current_spawn_index % 4
+
+	bossenemy_instance.global_position = bossenemy_spawn[current_spawn_index].global_position
+	enemy_container.add_child(bossenemy_instance)
+	bossenemy_instance.set_difficulty(difficulty)
+
+	var animation_player = bossenemy_instance.animation
+	var animation_list = animation_player.get_animation_list()
+	if animation_list.size() > 0:
+		var random_animation_index = randi() % animation_list.size()
+		var random_animation_name = animation_list[random_animation_index]
+		animation_player.play(random_animation_name)
+	else:
+		print("No animations found in AnimationPlayer.")
+
+	# Update the index for the next spawn
+	current_spawn_index += 1
+
 func _on_DifficultyTimer_timeout():
-	if difficulty >= 20:
+	if difficulty >= 10:
 		difficulty_timer.stop()
-		difficulty = 20
+		difficulty = 10
 		return
 
 	difficulty += 1
@@ -199,6 +257,12 @@ func game_over():
 	current_letter_index = -1
 
 func start_game():
+	bossskill.hide()
+	portal1.hide()
+	portal2.hide()
+	portal3.hide()
+	portal4.hide()
+	doomskill.hide()
 	game_over_screen.hide()
 	winner_screen.hide()
 	skillpoint = 2
@@ -237,42 +301,66 @@ func _on_PauseButton_pressed():
 	pause_instance.set_process_input(true)
 
 func freeze():
-	if skillpoint >= 1:
-		skillpoint -= 1
-		update_skill_point_label()
-		print("Skill points after using freeze: %d" % skillpoint)  # Debugging print
+	# Freeze enemies for 3 seconds
+	for enemy in enemy_container.get_children():
+		enemy.freeze()  # Call a freeze method on the enemy script
 
-		# Freeze enemies for 3 seconds
-		for enemy in enemy_container.get_children():
-			enemy.freeze()  # Call a freeze method on the enemy script
+	frozen_effect.show()
+	yield(get_tree().create_timer(3.0), "timeout")
+	frozen_effect.hide()
 
-		frozen_effect.show()
-		yield(get_tree().create_timer(3.0), "timeout")
-		frozen_effect.hide()
+	# Slow down enemies for 2 seconds
+	for enemy in enemy_container.get_children():
+		enemy.slow_down()  # Call a slow_down method on the enemy script
 
-		# Slow down enemies for 2 seconds
-		for enemy in enemy_container.get_children():
-			enemy.slow_down()  # Call a slow_down method on the enemy script
-
-		yield(get_tree().create_timer(2.0), "timeout")
+	yield(get_tree().create_timer(2.0), "timeout")
 
 func remove_random_enemies(count: int):
-	if skillpoint >= 1:
-		skillpoint -= 1
-		update_skill_point_label()
-		print("Skill points after removing enemies: %d" % skillpoint)  # Debugging print
+	# Show and play the doomskill animation
+	doomskill.show()
+	doomskill.play("cast")
+	yield(doomskill, "animation_finished")  # Wait for the doomskill animation to finish
+	
+	# After the doomskill animation finishes, remove enemies
 	var enemies = enemy_container.get_children()
 	for i in range(min(count, enemies.size())):
 		enemies[i].queue_free()
+	
+	# Hide the doomskill after removing enemies
+	doomskill.hide()
 
 func launch_projectile(target):
 	var projectile_instance = Projectile.instance()
 	projectile_instance.global_position = Vector2(309, 752)
 	add_child(projectile_instance)
 	projectile_instance.target = target
+	launch_projectile_flag = true
+	attack_timer.start(0.7)
+
+func _on_attack_timer_timeout():
+	launch_projectile_flag = false
 
 func _on_BossTimer_timeout():
 	spawn_boss()
 
 func _on_AfterBoss_timeout():
-	spawn_enemy()
+	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the first portal
+	portal1.show()
+	portal1.play("idle")
+	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the second portal
+	portal2.show()
+	portal2.play("idle")
+	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the third portal
+	portal3.show()
+	portal3.play("idle")
+	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the fourth portal
+	portal4.show()
+	portal4.play("idle")
+	spawn_bossenemy()
+	
+func toggle_bossskill_visibility() -> void:
+	for i in range(20):  # Adjust the number of times you want to show/hide the BossSkill
+		bossskill.show()
+		yield(get_tree().create_timer(0.5), "timeout")  # Wait for 0.5 seconds (adjust as needed)
+		bossskill.hide()
+		yield(get_tree().create_timer(0.5), "timeout")  # Wait for 0.5 seconds (adjust as needed)

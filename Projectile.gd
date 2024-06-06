@@ -2,7 +2,7 @@ extends Area2D
 
 onready var projectile = $Sprite
 
-export var speed: float = 400
+export var speed: float = 600
 var direction: Vector2 = Vector2.ZERO
 var target: Node2D = null
 var is_target_valid: bool = true  # Track if the target is still valid
@@ -25,7 +25,7 @@ func _on_Projectile_body_entered(body):
 		body.play_death_animation()
 		projectile.hide()
 		var delay_timer = Timer.new()
-		delay_timer.wait_time = 0.6  # Adjust the delay time as needed
+		delay_timer.wait_time = 0.1  # Adjust the delay time as needed
 		add_child(delay_timer)
 		delay_timer.start()
 		delay_timer.connect("timeout", self, "_on_delay_timer_timeout")

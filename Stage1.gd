@@ -7,6 +7,8 @@ onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
 onready var difficulty_timer = $DifficultyTimer
+onready var hero = $Hero
+onready var attack_timer = $AttackTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
@@ -30,6 +32,14 @@ var timer_update: Timer = Timer.new()
 
 var barrier_health: int = 0
 var barrier_active: bool = false
+
+var launch_projectile_flag = false
+
+func _process(delta):
+	if launch_projectile_flag:
+		hero.play("attack")
+	else:
+		hero.play("idle")
 
 func _ready() -> void:
 	add_child(timer_update)
@@ -182,6 +192,11 @@ func launch_projectile(target):
 	projectile_instance.global_position = Vector2(309, 752)
 	add_child(projectile_instance)
 	projectile_instance.target = target
+	launch_projectile_flag = true
+	attack_timer.start(0.7)
+
+func _on_attack_timer_timeout():
+	launch_projectile_flag = false
 
 func _on_RestartButton_pressed():
 	get_tree().change_scene("res://Stage1.tscn")
