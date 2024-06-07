@@ -4,7 +4,7 @@ onready var Click_sound = get_node("/root/ClickSound")
 
 func _on_Stage1_pressed():
 	Click_sound.play()
-	get_tree().change_scene("res://Stage1.tscn")
+	get_tree().change_scene("res://Intro.tscn")
 
 
 func _on_Stage2_pressed():
