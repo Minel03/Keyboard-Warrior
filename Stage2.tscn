@@ -153,7 +153,7 @@ position = Vector2( 540, 160 )
 [node name="BossContainer" type="Node2D" parent="."]
 
 [node name="BossTimer" type="Timer" parent="."]
-wait_time = 300.0
+wait_time = 30.0
 autostart = true
 
 [node name="AfterBoss" type="Timer" parent="."]
@@ -378,7 +378,7 @@ text = "0"
 
 [node name="TopRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/TopRowLeft"]
 margin_left = 113.0
-margin_right = 598.0
+margin_right = 583.0
 margin_bottom = 38.0
 mouse_filter = 2
 
@@ -397,14 +397,14 @@ text = "00:00"
 
 [node name="TimerValue2" type="Label" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
 margin_left = 293.0
-margin_right = 428.0
+margin_right = 413.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
-text = "         "
+text = "        "
 
 [node name="PauseButton" type="Button" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
-margin_left = 432.0
-margin_right = 485.0
+margin_left = 417.0
+margin_right = 470.0
 margin_bottom = 38.0
 text = "PAUSE"
 

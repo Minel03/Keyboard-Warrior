@@ -1,0 +1,81 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://assets/Boss/Golem Minion/1080x1080/golem-minion-1.png" type="Texture" id=1]
+[ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://BossSpawn.gd" type="Script" id=3]
+[ext_resource path="res://assets/Boss/Golem Minion/1080x1080/golem-minion-2.png" type="Texture" id=4]
+[ext_resource path="res://assets/death effect/5.png" type="Texture" id=20]
+[ext_resource path="res://assets/death effect/2.png" type="Texture" id=21]
+[ext_resource path="res://assets/death effect/1.png" type="Texture" id=22]
+[ext_resource path="res://assets/death effect/6.png" type="Texture" id=23]
+[ext_resource path="res://assets/death effect/3.png" type="Texture" id=24]
+[ext_resource path="res://assets/death effect/4.png" type="Texture" id=25]
+
+[sub_resource type="DynamicFont" id=1]
+size = 25
+font_data = ExtResource( 2 )
+
+[sub_resource type="Animation" id=10]
+resource_name = "move"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 1 ), ExtResource( 4 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "death"
+tracks/0/type = "value"
+tracks/0/path = NodePath("../Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 22 ), ExtResource( 21 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 20 ), ExtResource( 23 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 30, 22 )
+
+[node name="Enemy" type="KinematicBody2D"]
+position = Vector2( 829, 221 )
+script = ExtResource( 3 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = -100.0
+margin_top = -65.0
+margin_right = 103.0
+margin_bottom = -24.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center]type this[/center]"
+text = "type this"
+scroll_active = false
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.045, 0.045 )
+texture = ExtResource( 4 )
+region_rect = Rect2( 517.656, 409.344, 82.0208, 83.5683 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/move = SubResource( 10 )
+
+[node name="DeathAnimation" type="AnimationPlayer" parent="."]
+root_node = NodePath("")
+anims/death = SubResource( 9 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 2, -4 )
+shape = SubResource( 2 )

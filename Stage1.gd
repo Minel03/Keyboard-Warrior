@@ -46,18 +46,34 @@ func _ready() -> void:
 	timer_update.connect("timeout", self, "update_timer")
 	start_game()
 
+var ch1_end_scene = preload("res://story/Chapter1_End.tscn")
+
 func update_timer() -> void:
 	if timer_running:
 		game_duration_seconds += 1
 		var minutes = game_duration_seconds / 60
 		var seconds = game_duration_seconds % 60
 		timer_label.text = "%02d:%02d" % [minutes, seconds]
-		if minutes >= 10:
-			winner_screen.show()
+		if minutes >= 1:
+			pause_game_and_show_dialogue(ch1_end_scene)
+			#winner_screen.show()
 			label.hide()
 			spawn_timer.stop()
 			difficulty_timer.stop()
 			stop_timer()
+		
+func pause_game_and_show_dialogue(dialogue_scene):
+	var dialogue_instance = dialogue_scene.instance()
+	dialogue_instance.connect("dialogue_finished", self, "resume_game")
+	add_child(dialogue_instance)
+	get_tree().paused = true
+	dialogue_instance.set_process_input(true)
+	dialogue_instance.set_pause_mode(Node.PAUSE_MODE_PROCESS)
+	
+func on_dialogue_finished():
+	winner_screen.show()
+	ch1_end_scene.queue_free()
+	get_tree().paused = false
 
 func start_timer() -> void:
 	game_duration_seconds = 0

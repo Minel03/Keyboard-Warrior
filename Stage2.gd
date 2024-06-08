@@ -1,6 +1,7 @@
 extends Node2D
 
 var Enemy = preload("res://Enemy2.tscn")
+var BossEnemy = preload("res://BossSpawn.tscn")
 var Boss = preload("res://Boss.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
@@ -39,7 +40,7 @@ var incomplete_enemies: Array = []  # Track incomplete enemies
 var current_letter_index: int = -1
 var boss_instance = null  # Variable to keep track of the boss instance
 var boss_spawned = false  # Flag to indicate if a boss is spawned
-
+var boss_spawn_canceled = false  # Add this line to declare a new variable
 
 var current_spawn_index: int = 0
 var difficulty: int = 6
@@ -67,6 +68,10 @@ func _ready() -> void:
 	after_boss.connect("timeout", self, "_on_AfterBoss_timeout")
 	start_game()
 
+var ch2_2_scene = preload("res://story/ch2-2.tscn")
+var ch2_3_scene = preload("res://story/ch2-3.tscn")
+var ch2_4_scene = preload("res://story/ch2-4.tscn")
+
 func update_timer() -> void:
 	if timer_running:
 		game_duration_seconds += 1
@@ -79,15 +84,34 @@ func update_timer() -> void:
 			spawn_timer.stop()
 			difficulty_timer.stop()
 			stop_timer()
+		if minutes == 4 and seconds == 55:
+			pause_game_and_show_dialogue(ch2_2_scene)
+		if minutes == 7 and seconds == 15:
+			pause_game_and_show_dialogue(ch2_3_scene)
+		if minutes == 9 and seconds == 45:
+			pause_game_and_show_dialogue(ch2_4_scene)
 		if minutes == 7 and seconds == 45:
 			toggle_bossskill_visibility()
-		if minutes == 9 and seconds == 50:
-			spawn_bossenemy().stop()
+		if minutes == 9 and seconds == 45:
+			boss_spawn_canceled = true  # Set the flag to true
 			launch_projectile(boss_instance)
-			portal1.hide()
-			portal2.hide()
-			portal3.hide()
-			portal4.hide()
+		if minutes == 10:
+			label.hide()
+			spawn_timer.stop()
+			difficulty_timer.stop()
+			stop_timer()
+			game_over_screen.show()
+
+func pause_game_and_show_dialogue(dialogue_scene):
+	var dialogue_instance = dialogue_scene.instance()
+	dialogue_instance.connect("dialogue_finished", self, "resume_game")
+	add_child(dialogue_instance)
+	get_tree().paused = true
+	dialogue_instance.set_process_input(true)
+	dialogue_instance.set_pause_mode(Node.PAUSE_MODE_PROCESS)
+		
+func resume_game():
+	get_tree().paused = false
 
 func start_timer() -> void:
 	game_duration_seconds = 0
@@ -128,7 +152,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var typed_event = event as InputEventKey
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
-		
+
 		# Check for the '1' key press to activate freeze()
 		if typed_event.scancode == KEY_1 and skillpoint >= 1:
 			skillpoint -= 1
@@ -140,7 +164,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			update_skill_point_label()
 			remove_random_enemies(5)
 			return
-		
+
 		frozen_icon.hide()
 		doom_icon.hide()
 
@@ -150,26 +174,28 @@ func _unhandled_input(event: InputEvent) -> void:
 			var found_enemy = false
 			for enemy in active_enemies:
 				var prompt = enemy.get_prompt()
-				var next_character = prompt.substr(current_letter_index, 1)
-				if key_typed == next_character:
-					found_enemy = true
-					print("successfully typed %s" % key_typed)
-					current_letter_index += 1
-					enemy.set_next_character(current_letter_index)
-					if current_letter_index == prompt.length():
-						print("done")
-						current_letter_index = -1
-						launch_projectile(enemy)  # Launch the projectile at the enemy
-						active_enemies.erase(enemy)
-						completed_enemies.append(enemy)  # Add the completed enemy to the list
-						enemies_killed += 1
-						score_value.text = str(enemies_killed)
-						frozen_icon.show()
-						doom_icon.show()
-					break
+				if prompt != null and current_letter_index < prompt.length():
+					var next_character = prompt.substr(current_letter_index, 1)
+					if key_typed == next_character:
+						found_enemy = true
+						print("successfully typed %s" % key_typed)
+						current_letter_index += 1
+						enemy.set_next_character(current_letter_index)
+						if current_letter_index == prompt.length():
+							print("done")
+							current_letter_index = -1
+							launch_projectile(enemy)  # Launch the projectile at the enemy
+							active_enemies.erase(enemy)
+							completed_enemies.append(enemy)  # Add the completed enemy to the list
+							enemies_killed += 1
+							score_value.text = str(enemies_killed)
+							frozen_icon.show()
+							doom_icon.show()
+						break
 
 			if not found_enemy:
 				print("incorrectly typed %s" % key_typed)
+
 
 func _on_SpawnTimer_timeout():
 	spawn_enemy()
@@ -203,7 +229,7 @@ func spawn_boss():
 		after_boss.start(5)  # Start the timer for 5 seconds
 
 func spawn_bossenemy():
-	var bossenemy_instance = Enemy.instance()
+	var bossenemy_instance = BossEnemy.instance()
 	var bossenemy_spawn = bossenemy_container.get_children()
 
 	# Ensure the index is within the bounds of the spawns array (0 to 3)
@@ -344,6 +370,8 @@ func _on_BossTimer_timeout():
 	spawn_boss()
 
 func _on_AfterBoss_timeout():
+	if boss_spawn_canceled:
+		return
 	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the first portal
 	portal1.show()
 	portal1.play("idle")
@@ -356,11 +384,15 @@ func _on_AfterBoss_timeout():
 	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the fourth portal
 	portal4.show()
 	portal4.play("idle")
-	spawn_bossenemy()
+	# Check if the boss spawn has been canceled
+	if not boss_spawn_canceled:
+		spawn_bossenemy()
 	
 func toggle_bossskill_visibility() -> void:
-	for i in range(20):  # Adjust the number of times you want to show/hide the BossSkill
+	for i in range(30):  # Adjust the number of times you want to show/hide the BossSkill
 		bossskill.show()
 		yield(get_tree().create_timer(0.5), "timeout")  # Wait for 0.5 seconds (adjust as needed)
 		bossskill.hide()
 		yield(get_tree().create_timer(0.5), "timeout")  # Wait for 0.5 seconds (adjust as needed)
+
+
