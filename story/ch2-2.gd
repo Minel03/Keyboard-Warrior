@@ -1,11 +1,11 @@
 extends Control
 
 var images = [
-	preload("res://assets/intro/4.png")
+	preload("res://assets/intro/Black_colour.jpg")
 ]
 
 var dialogues = [
-	"As the days turn into weeks and the weeks into months, Ethan's resolve remains unbroken. He witnesses the bravery and sacrifice of his fellow defenders, their spirits unwavering in the face of overwhelming odds. But for every enemy vanquished, a dozen more take its place, an endless tide of darkness that threatens to consume them all.",
+	"The climax of the battle arrives with the emergence of the boss golem, a colossal monstrosity crafted from the very essence of darkness. Ethan's strength is waning, but his determination burns brighter than ever. With each keystroke, he unleashes powerful spells of light, aiming to bring down the towering foe.",
 ]
 
 var current_index = 0
@@ -14,6 +14,8 @@ onready var image_rect = $TextureRect
 onready var dialogue_label = $Label
 onready var animation_player = $AnimationPlayer
 onready var transition_timer = $transitiontimer
+
+signal dialogue_finished
 
 func _ready():
 	update_slide()
@@ -24,21 +26,19 @@ func update_slide():
 		dialogue_label.text = dialogues[current_index]
 		start_text_scroll()
 	else:
-		start_stage()
+		resume_stage()
 	
-func start_stage():
-	get_tree().change_scene("res://Stage2.tscn")
+func resume_stage():
+	emit_signal("dialogue_finished")
+	queue_free()
 
 func start_text_scroll():
 	animation_player.play("text_slide")
 	transition_timer.start(20)
-
+	
 func _on_transitiontimer_timeout():
 	current_index += 1
 	update_slide()
-
-func _on_Button_pressed():
-	start_stage()
 
 var pause_scene = preload("res://Pause.tscn")
 onready var Click_sound = get_node("/root/ClickSound")

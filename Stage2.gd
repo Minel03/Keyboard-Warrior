@@ -67,6 +67,10 @@ func _ready() -> void:
 	after_boss.connect("timeout", self, "_on_AfterBoss_timeout")
 	start_game()
 
+var ch2_2_scene = preload("res://story/ch2-2.tscn")
+var ch2_3_scene = preload("res://story/ch2-3.tscn")
+var ch2_4_scene = preload("res://story/ch2-4.tscn")
+
 func update_timer() -> void:
 	if timer_running:
 		game_duration_seconds += 1
@@ -79,6 +83,12 @@ func update_timer() -> void:
 			spawn_timer.stop()
 			difficulty_timer.stop()
 			stop_timer()
+		if minutes == 4 and seconds == 55:
+			pause_game_and_show_dialogue(ch2_2_scene)
+		if minutes == 7 and seconds == 15:
+			pause_game_and_show_dialogue(ch2_3_scene)
+		if minutes == 9 and seconds == 45:
+			pause_game_and_show_dialogue(ch2_4_scene)
 		if minutes == 7 and seconds == 45:
 			toggle_bossskill_visibility()
 		if minutes == 9 and seconds == 50:
@@ -88,6 +98,17 @@ func update_timer() -> void:
 			portal2.hide()
 			portal3.hide()
 			portal4.hide()
+
+func pause_game_and_show_dialogue(dialogue_scene):
+	var dialogue_instance = dialogue_scene.instance()
+	dialogue_instance.connect("dialogue_finished", self, "resume_game")
+	add_child(dialogue_instance)
+	get_tree().paused = true
+	dialogue_instance.set_process_input(true)
+	dialogue_instance.set_pause_mode(Node.PAUSE_MODE_PROCESS)
+		
+func resume_game():
+	get_tree().paused = false
 
 func start_timer() -> void:
 	game_duration_seconds = 0
@@ -364,3 +385,5 @@ func toggle_bossskill_visibility() -> void:
 		yield(get_tree().create_timer(0.5), "timeout")  # Wait for 0.5 seconds (adjust as needed)
 		bossskill.hide()
 		yield(get_tree().create_timer(0.5), "timeout")  # Wait for 0.5 seconds (adjust as needed)
+
+

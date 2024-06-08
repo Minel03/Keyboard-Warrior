@@ -10,4 +10,4 @@ func _on_MainMenuButton_pressed():
 
 func _on_stage_2_pressed():
 	Click_sound.play()
-	get_tree().change_scene("res://Chapter2_Intro.tscn")
+	get_tree().change_scene("res://story/Chapter2_Intro.tscn")
