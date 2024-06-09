@@ -95,19 +95,16 @@ func update_timer() -> void:
 		if minutes == 9 and seconds == 50:
 			spawn_bossenemy().stop()
 			launch_projectile(boss_instance)
-<<<<<<< Updated upstream
 			portal1.hide()
 			portal2.hide()
 			portal3.hide()
 			portal4.hide()
-=======
 		if minutes == 10:
 			label.hide()
 			spawn_timer.stop()
 			difficulty_timer.stop()
 			stop_timer()
 			pause_game_and_show_dialogue(ch2_end_scene)
->>>>>>> Stashed changes
 
 func pause_game_and_show_dialogue(dialogue_scene):
 	var dialogue_instance = dialogue_scene.instance()
