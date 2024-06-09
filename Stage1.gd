@@ -54,9 +54,8 @@ func update_timer() -> void:
 		var minutes = game_duration_seconds / 60
 		var seconds = game_duration_seconds % 60
 		timer_label.text = "%02d:%02d" % [minutes, seconds]
-		if minutes >= 1:
+		if minutes >= 5:
 			pause_game_and_show_dialogue(ch1_end_scene)
-			#winner_screen.show()
 			label.hide()
 			spawn_timer.stop()
 			difficulty_timer.stop()

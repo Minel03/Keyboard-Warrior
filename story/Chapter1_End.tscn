@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://story/Chapter1_End.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -7,12 +7,6 @@
 size = 32
 outline_size = 3
 outline_color = Color( 0.152941, 0.152941, 0.152941, 1 )
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=3]
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=4]
 font_data = ExtResource( 2 )
 
 [sub_resource type="Animation" id=2]
@@ -50,38 +44,10 @@ custom_fonts/font = SubResource( 1 )
 align = 1
 autowrap = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 480.0
-margin_top = 20.0
-margin_right = 598.0
-margin_bottom = 60.0
-
-[node name="Skip" type="Button" parent="HBoxContainer"]
-margin_right = 52.0
-margin_bottom = 40.0
-custom_fonts/font = SubResource( 3 )
-text = "SKIP"
-align = 2
-
-[node name="Spacer" type="Control" parent="HBoxContainer"]
-margin_left = 56.0
-margin_right = 56.0
-margin_bottom = 40.0
-size_flags_horizontal = 3
-
-[node name="Pause" type="Button" parent="HBoxContainer"]
-margin_left = 60.0
-margin_right = 122.0
-margin_bottom = 40.0
-custom_fonts/font = SubResource( 4 )
-text = "PAUSE"
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/text_slide = SubResource( 2 )
 
 [node name="transitiontimer" type="Timer" parent="."]
 wait_time = 10.0
 
-[connection signal="pressed" from="HBoxContainer/Skip" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="HBoxContainer/Pause" to="." method="_on_Pause_pressed"]
 [connection signal="timeout" from="transitiontimer" to="." method="_on_transitiontimer_timeout"]

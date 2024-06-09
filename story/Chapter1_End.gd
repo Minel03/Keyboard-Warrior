@@ -41,16 +41,5 @@ func _on_transitiontimer_timeout():
 	current_index += 1
 	update_slide()
 
-func _on_Button_pressed():
-	cleared_stage()
-
 var pause_scene = preload("res://Pause.tscn")
 onready var Click_sound = get_node("/root/ClickSound")
-
-func _on_Pause_pressed():
-	Click_sound.play()
-	var pause_instance = pause_scene.instance()
-	add_child(pause_instance)
-		
-	get_tree().paused = true
-	pause_instance.set_process_input(true)

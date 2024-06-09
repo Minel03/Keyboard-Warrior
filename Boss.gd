@@ -3,7 +3,7 @@ extends KinematicBody2D
 onready var animated_sprite = $AnimatedSprite
 
 export (float) var speed = 100
-var target_position = Vector2(310, 200)
+var target_position = Vector2(300, 200)
 
 func _physics_process(delta: float) -> void:
 	animated_sprite.play("boss_idle")
