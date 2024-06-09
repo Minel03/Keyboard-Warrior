@@ -2,6 +2,7 @@ extends Node2D
 
 var Enemy = preload("res://Enemy2.tscn")
 var Boss = preload("res://Boss.tscn")
+var BossSpawn = preload("res://BossSpawn.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
 onready var enemy_container = $EnemyContainer
@@ -39,7 +40,7 @@ var incomplete_enemies: Array = []  # Track incomplete enemies
 var current_letter_index: int = -1
 var boss_instance = null  # Variable to keep track of the boss instance
 var boss_spawned = false  # Flag to indicate if a boss is spawned
-
+var boss_spawn_canceled = false  # Add this line to declare a new variable
 
 var current_spawn_index: int = 0
 var difficulty: int = 6
@@ -93,13 +94,13 @@ func update_timer() -> void:
 		if minutes == 7 and seconds == 45:
 			toggle_bossskill_visibility()
 		if minutes == 9 and seconds == 55:
-			spawn_bossenemy().stop()
+			boss_spawn_canceled = true  # Set the flag to true
 			launch_projectile(boss_instance)
 			portal1.hide()
 			portal2.hide()
 			portal3.hide()
 			portal4.hide()
-		if minutes == 10:
+		if minutes == 9 and seconds == 56:
 			label.hide()
 			spawn_timer.stop()
 			difficulty_timer.stop()
@@ -231,7 +232,7 @@ func spawn_boss():
 		after_boss.start(5)  # Start the timer for 5 seconds
 
 func spawn_bossenemy():
-	var bossenemy_instance = Enemy.instance()
+	var bossenemy_instance = BossSpawn.instance()
 	var bossenemy_spawn = bossenemy_container.get_children()
 
 	# Ensure the index is within the bounds of the spawns array (0 to 3)
@@ -372,6 +373,8 @@ func _on_BossTimer_timeout():
 	spawn_boss()
 
 func _on_AfterBoss_timeout():
+	if boss_spawn_canceled:
+		return
 	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the first portal
 	portal1.show()
 	portal1.play("idle")
@@ -384,7 +387,9 @@ func _on_AfterBoss_timeout():
 	yield(get_tree().create_timer(1.0), "timeout")  # Wait for 1 second before showing the fourth portal
 	portal4.show()
 	portal4.play("idle")
-	spawn_bossenemy()
+	# Check if the boss spawn has been canceled
+	if not boss_spawn_canceled:
+		spawn_bossenemy()
 	
 func toggle_bossskill_visibility() -> void:
 	for i in range(20):  # Adjust the number of times you want to show/hide the BossSkill
