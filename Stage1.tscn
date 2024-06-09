@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Stage1.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://assets/skills-gamedev/trees-bg.png" type="Texture" id=5]
 [ext_resource path="res://assets/SPRITES/Hero/attack.png" type="Texture" id=6]
 [ext_resource path="res://assets/SPRITES/Hero/idle-2.png" type="Texture" id=7]
+[ext_resource path="res://projectile_sfx.tscn" type="PackedScene" id=8]
+[ext_resource path="res://enemydeath_sound.tscn" type="PackedScene" id=9]
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -264,6 +266,10 @@ margin_right = 184.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "0"
+
+[node name="enemydeath_sound" parent="." instance=ExtResource( 9 )]
+
+[node name="projectile_sfx" parent="." instance=ExtResource( 8 )]
 
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
 [connection signal="body_entered" from="LoseArea" to="." method="_on_LoseArea_body_entered"]

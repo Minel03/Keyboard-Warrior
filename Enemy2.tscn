@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://assets/SPRITES/Enemy/2.png" type="Texture" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -25,6 +25,7 @@
 [ext_resource path="res://assets/death effect/6.png" type="Texture" id=23]
 [ext_resource path="res://assets/death effect/3.png" type="Texture" id=24]
 [ext_resource path="res://assets/death effect/4.png" type="Texture" id=25]
+[ext_resource path="res://enemydeath_sound.tscn" type="PackedScene" id=26]
 
 [sub_resource type="DynamicFont" id=1]
 size = 25
@@ -181,3 +182,5 @@ anims/death = SubResource( 9 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 2, -4 )
 shape = SubResource( 2 )
+
+[node name="enemydeath_sound" parent="." instance=ExtResource( 26 )]

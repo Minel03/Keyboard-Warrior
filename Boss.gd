@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 onready var animated_sprite = $AnimatedSprite
+onready var death_sound = $bossdeath_sound
 
 export (float) var speed = 100
 var target_position = Vector2(300, 200)
@@ -16,3 +17,4 @@ func _physics_process(delta: float) -> void:
 
 func play_death_animation():
 	animated_sprite.play("death")
+	death_sound.play()

@@ -13,11 +13,17 @@ func _on_SettingsButton_pressed():
 	add_child(settings_instance)
 
 func _on_MainMenuButton_pressed():
+	MusicManager.stop_infinitemusic()
+	MusicManager.stop_stage1music()
+	MusicManager.stop_stage2music()
 	Click_sound.play()
 	get_tree().paused = false
 	get_tree().change_scene("res://MainMenu.tscn")
 	
 func _on_Restart_pressed():
+	MusicManager.stop_infinitemusic()
+	MusicManager.stop_stage1music()
+	MusicManager.stop_stage2music()
 	Click_sound.play()
 	get_tree().paused = false
 	var current_scene = get_tree().current_scene

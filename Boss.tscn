@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/death effect/4.png" type="Texture" id=1]
 [ext_resource path="res://assets/death effect/3.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/death effect/2.png" type="Texture" id=7]
 [ext_resource path="res://assets/Boss/1080x1080/golem-2.png" type="Texture" id=8]
 [ext_resource path="res://assets/Boss/1080x1080/golem-1.png" type="Texture" id=9]
+[ext_resource path="res://bossdeath_sound.tscn" type="PackedScene" id=10]
 
 [sub_resource type="SpriteFrames" id=4]
 animations = [ {
@@ -38,3 +39,6 @@ animation = "boss_idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 1, 0 )
 shape = SubResource( 2 )
+
+[node name="bossdeath_sound" parent="." instance=ExtResource( 10 )]
+volume_db = 9.614
