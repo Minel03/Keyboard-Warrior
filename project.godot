@@ -20,12 +20,13 @@ PromptList="*res://PromptList.gd"
 GlobalSignals="*res://GlobalSignals.gd"
 Bgm="*res://bgm.tscn"
 ClickSound="*res://ClickSound.tscn"
-SynonymList="*res://InfiniteList.gd"
+InfinitePromptList="*res://InfinitePromptList.gd"
+PromptList2="*res://PromptList2.gd"
 
 [display]
 
-window/size/width=560
-window/size/height=936
+window/size/width=620
+window/size/height=785
 window/handheld/orientation="portrait"
 
 [global]

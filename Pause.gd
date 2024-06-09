@@ -17,3 +17,8 @@ func _on_MainMenuButton_pressed():
 	get_tree().paused = false
 	get_tree().change_scene("res://MainMenu.tscn")
 	
+func _on_Restart_pressed():
+	Click_sound.play()
+	get_tree().paused = false
+	var current_scene = get_tree().current_scene
+	get_tree().reload_current_scene()

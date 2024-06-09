@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 onready var animation = $AnimationPlayer
+onready var death_animation = $DeathAnimation  # Reference to the new AnimationPlayer for death animation
 export (Color) var blue = Color("#4682b4")
 export (Color) var green = Color("#639765")
 export (Color) var red = Color("#a65455")
@@ -16,6 +17,13 @@ func _ready() -> void:
 	prompt_text = PromptList.get_prompt()
 	prompt.parse_bbcode(set_center_tags(prompt_text))
 	original_speed = speed  # Store the original speed
+
+func play_death_animation():
+	death_animation.play("death")
+
+func _on_death_animation_finished():
+	if death_animation.is_playing():
+		queue_free()
 
 func _physics_process(delta: float) -> void:
 	global_position.y += speed
@@ -49,9 +57,3 @@ func get_bbcode_color_tag(color: Color) -> String:
 	
 func get_bbcode_end_color_tag() -> String:
 	return "[/color]"
-
-func freeze() -> void:
-	speed = 0.0  # Set speed to 0 to freeze the enemy
-
-func slow_down() -> void:
-	speed = original_speed * 0.5  # Slow down the enemy to half of its original speed
