@@ -157,6 +157,8 @@ func find_new_active_enemy(typed_character: String):
 			return
 
 func _unhandled_input(event: InputEvent) -> void:
+	if game_over_screen.visible:  # Check if the game is over
+		return  # Ignore input if the game is over
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var typed_event = event as InputEventKey
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
