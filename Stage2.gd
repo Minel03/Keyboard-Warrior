@@ -52,6 +52,7 @@ var timer_running: bool = false
 var timer_update: Timer = Timer.new()
 
 var launch_projectile_flag = false
+var skill_active = false  # Flag to track if a skill is active
 
 func _process(delta):
 	if launch_projectile_flag:
@@ -126,6 +127,8 @@ func stop_timer() -> void:
 	timer_running = false
 
 func find_new_active_enemy(typed_character: String):
+	if skill_active:
+		return  # Don't allow typing if a skill is active
 	# Clear any previous active enemies
 	active_enemies.clear()
 
@@ -169,6 +172,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			update_skill_point_label()
 			remove_random_enemies(5)
 			return
+		
+		if skill_active:
+			return  # Don't allow typing if a skill is active
 		
 		frozen_icon.hide()
 		doom_icon.hide()
@@ -345,6 +351,7 @@ func freeze():
 	yield(get_tree().create_timer(2.0), "timeout")
 
 func remove_random_enemies(count: int):
+	skill_active = true  # Set the skill active flag
 	# Show and play the doomskill animation
 	doomskill.show()
 	doomskill.play("cast")
@@ -357,6 +364,7 @@ func remove_random_enemies(count: int):
 	
 	# Hide the doomskill after removing enemies
 	doomskill.hide()
+	skill_active = false  # Reset the skill active flag
 
 func launch_projectile(target):
 	var projectile_instance = Projectile.instance()
