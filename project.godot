@@ -18,10 +18,10 @@ config/icon="res://icon.png"
 
 PromptList="*res://PromptList.gd"
 GlobalSignals="*res://GlobalSignals.gd"
-Bgm="*res://bgm.tscn"
 ClickSound="*res://ClickSound.tscn"
 InfinitePromptList="*res://InfinitePromptList.gd"
 PromptList2="*res://PromptList2.gd"
+MusicManager="*res://MusicManager.tscn"
 
 [display]
 

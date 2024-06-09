@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 onready var animation = $AnimationPlayer
 onready var death_animation = $DeathAnimation
+onready var death_sound = $enemydeath_sound
 export (Color) var blue = Color("#4682b4")
 export (Color) var green = Color("#639765")
 export (Color) var red = Color("#a65455")

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://story/Chapter1_Intro.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://storyboard_bgm.tscn" type="PackedScene" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -81,6 +82,9 @@ anims/text_slide = SubResource( 2 )
 
 [node name="transitiontimer" type="Timer" parent="."]
 wait_time = 10.0
+
+[node name="storyboard_bgm" parent="." instance=ExtResource( 3 )]
+volume_db = 6.118
 
 [connection signal="pressed" from="HBoxContainer/Skip" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Pause" to="." method="_on_Pause_pressed"]

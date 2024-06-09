@@ -5,6 +5,8 @@ var Boss = preload("res://Boss.tscn")
 var BossSpawn = preload("res://BossSpawn.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
+onready var freezesfx = $freeze_sfx
+onready var doomsfx = $doom_sfx
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
@@ -64,6 +66,7 @@ func _process(delta):
 		doom_icon.hide()
 
 func _ready() -> void:
+	MusicManager.play_stage2music()
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
 	after_boss.connect("timeout", self, "_on_AfterBoss_timeout")
@@ -279,6 +282,8 @@ func _on_LoseArea_body_entered(body: Node) -> void:
 	game_over()
 
 func game_over():
+	MusicManager.stop_stage2music()
+	MusicManager.play_gameovermusic()
 	frozen_effect.hide()
 	game_over_screen.show()
 	label.hide()
@@ -321,9 +326,11 @@ func update_skill_point_label():
 	skill_point_label.text = str(skillpoint)
 
 func _on_RestartButton_pressed():
+	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://Stage2.tscn")
 
 func _on_MenuButton_pressed():
+	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://StageMenu.tscn")
 
 var pause_scene = preload("res://Pause.tscn")
@@ -343,6 +350,7 @@ func freeze():
 		enemy.freeze()  # Call a freeze method on the enemy script
 
 	frozen_effect.show()
+	freezesfx.play()
 	yield(get_tree().create_timer(3.0), "timeout")
 	frozen_effect.hide()
 
@@ -356,6 +364,7 @@ func remove_random_enemies(count: int):
 	skill_active = true  # Set the skill active flag
 	# Show and play the doomskill animation
 	doomskill.show()
+	doomsfx.play()
 	doomskill.play("cast")
 	yield(doomskill, "animation_finished")  # Wait for the doomskill animation to finish
 	

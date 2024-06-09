@@ -3,6 +3,9 @@ extends Control
 var settings_scene = preload("res://Settings.tscn")
 onready var Click_sound = get_node("/root/ClickSound")
 
+func _ready():
+	MusicManager.play_menumusic()
+	
 func _on_StartButton_pressed():
 	Click_sound.play()
 	get_tree().change_scene("res://StageMenu.tscn")

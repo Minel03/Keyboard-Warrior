@@ -48,6 +48,8 @@ func _process(delta):
 		hero.play("idle")
 
 func _ready() -> void:
+	MusicManager.stop_menumusic()
+	MusicManager.play_infinitemusic()
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
 	start_game()
@@ -201,6 +203,8 @@ func update_word_labels():
 	words_value.text = "%d / %d" % [correct_word_count, overall_word_count]
 
 func game_over():
+	MusicManager.stop_infinitemusic()
+	MusicManager.play_gameovermusic()
 	game_over_screen.show()
 	label.hide()
 	spawn_timer.stop()
@@ -232,6 +236,7 @@ func start_game():
 	incorrect_keystrokes = 0  # Reset incorrect keystrokes
 
 func _on_MenuButton_pressed():
+	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://StageMenu.tscn")
 
 var pause_scene = preload("res://Pause.tscn")
@@ -257,4 +262,5 @@ func _on_PauseButton_pressed():
 	pause_instance.set_process_input(true)
 
 func _on_Restart_pressed():
+	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://Infinite.tscn")

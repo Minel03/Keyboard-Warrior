@@ -16,6 +16,7 @@ onready var animation_player = $AnimationPlayer
 onready var transition_timer = $transitiontimer
 
 func _ready():
+	MusicManager.stop_menumusic()
 	update_slide()
 	
 func update_slide():

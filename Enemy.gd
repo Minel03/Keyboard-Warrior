@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 onready var animation = $AnimationPlayer
 onready var death_animation = $DeathAnimation  # Reference to the new AnimationPlayer for death animation
+onready var death_sound = $enemydeath_sound
+
 export (Color) var blue = Color("#4682b4")
 export (Color) var green = Color("#639765")
 export (Color) var red = Color("#a65455")
@@ -20,6 +22,7 @@ func _ready() -> void:
 
 func play_death_animation():
 	death_animation.play("death")
+	death_sound.play()
 
 func _on_death_animation_finished():
 	if death_animation.is_playing():

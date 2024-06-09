@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Freezeskill_soundeffect.mp3-2c28a580ab18d62252e523ff9a37a40b.mp3str"
+
+[deps]
+
+source_file="res://assets/music/Freezeskill_soundeffect.mp3"
+dest_files=[ "res://.import/Freezeskill_soundeffect.mp3-2c28a580ab18d62252e523ff9a37a40b.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

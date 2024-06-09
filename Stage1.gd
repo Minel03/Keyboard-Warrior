@@ -3,6 +3,8 @@ extends Node2D
 var Enemy = preload("res://Enemy.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
+onready var enemydeathsound = $enemydeath_sound
+onready var projectilesfx = $projectile_sfx
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
@@ -42,6 +44,7 @@ func _process(delta):
 		hero.play("idle")
 
 func _ready() -> void:
+	MusicManager.play_stage1music()
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
 	start_game()
@@ -178,6 +181,8 @@ func _on_LoseArea_body_entered(body: Node) -> void:
 	game_over()
 
 func game_over():
+	MusicManager.stop_stage1music()
+	MusicManager.play_gameovermusic()
 	game_over_screen.show()
 	label.hide()
 	spawn_timer.stop()
@@ -216,9 +221,11 @@ func _on_attack_timer_timeout():
 	launch_projectile_flag = false
 
 func _on_RestartButton_pressed():
+	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://Stage1.tscn")
 
 func _on_MenuButton_pressed():
+	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://StageMenu.tscn")
 
 var pause_scene = preload("res://Pause.tscn")

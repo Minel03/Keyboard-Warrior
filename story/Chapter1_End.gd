@@ -16,6 +16,7 @@ onready var animation_player = $AnimationPlayer
 onready var transition_timer = $transitiontimer
 
 func _ready():
+	MusicManager.stop_menumusic()
 	update_slide()
 	
 var clear_scene = preload("res://stage1_clear.tscn")
