@@ -13,10 +13,6 @@ func _on_Stage2_pressed():
 	Click_sound.play()
 	get_tree().change_scene("res://story/Chapter2_Intro.tscn")
 
-func _on_Stage3_pressed():
-	Click_sound.play()
-	pass # Replace with function body.
-
 func _on_Synonym_pressed():
 	Click_sound.play()
 	get_tree().change_scene("res://Infinite.tscn")

@@ -2,7 +2,7 @@ extends Control
 
 var images = [
 	preload("res://assets/intro/6.png"),
-	preload("res://assets/intro/Black_colour.jpg"),
+	preload("res://assets/intro/6-1.png"),
 	preload("res://assets/intro/Black_colour.jpg")
 ]
 
