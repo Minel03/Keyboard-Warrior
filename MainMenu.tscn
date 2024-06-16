@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://assets/Area/Main.png" type="Texture" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -12,6 +12,8 @@
 [ext_resource path="res://assets/buttons/quit_hover.png" type="Texture" id=10]
 [ext_resource path="res://assets/buttons/settings_hover.png" type="Texture" id=11]
 [ext_resource path="res://assets/buttons/quit_click.png" type="Texture" id=12]
+[ext_resource path="res://assets/Title-1.png" type="Texture" id=13]
+[ext_resource path="res://assets/Title-2.png" type="Texture" id=14]
 
 [sub_resource type="DynamicFont" id=1]
 size = 48
@@ -35,6 +37,7 @@ texture = ExtResource( 1 )
 expand = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="."]
+visible = false
 margin_left = 80.0
 margin_top = 270.0
 margin_right = 544.0
@@ -48,11 +51,27 @@ margin_bottom = 72.0
 custom_fonts/font = SubResource( 1 )
 text = "KEYBOARD WARRIOR"
 
+[node name="Title-1" type="Sprite" parent="VBoxContainer2/Label"]
+position = Vector2( 152, -110 )
+texture = ExtResource( 13 )
+
+[node name="Title-2" type="Sprite" parent="VBoxContainer2/Label"]
+position = Vector2( 208, -86 )
+texture = ExtResource( 13 )
+
+[node name="Title-3" type="Sprite" parent="VBoxContainer2/Label"]
+position = Vector2( 56, -46 )
+texture = ExtResource( 14 )
+
+[node name="Title-4" type="Sprite" parent="VBoxContainer2/Label"]
+position = Vector2( -400, 42 )
+texture = ExtResource( 13 )
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 168.0
-margin_top = 376.0
+margin_top = 416.0
 margin_right = 728.0
-margin_bottom = 876.0
+margin_bottom = 916.0
 rect_scale = Vector2( 0.5, 0.5 )
 custom_constants/separation = 50
 alignment = 1
@@ -83,6 +102,16 @@ size_flags_horizontal = 4
 texture_normal = ExtResource( 8 )
 texture_pressed = ExtResource( 12 )
 texture_hover = ExtResource( 10 )
+
+[node name="Title-1" type="Sprite" parent="."]
+position = Vector2( 248, 192 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 13 )
+
+[node name="Title-2" type="Sprite" parent="."]
+position = Vector2( 400, 288 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 14 )
 
 [connection signal="pressed" from="VBoxContainer/Play" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/Settings" to="." method="_on_SettingsButton_pressed"]
