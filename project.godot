@@ -22,6 +22,8 @@ ClickSound="*res://ClickSound.tscn"
 InfinitePromptList="*res://InfinitePromptList.gd"
 PromptList2="*res://PromptList2.gd"
 MusicManager="*res://MusicManager.tscn"
+Global="*res://Global.gd"
+Leaderboard="*res://Leaderboard.gd"
 
 [display]
 

@@ -1,8 +1,13 @@
 extends Node2D
 
+# Load the StartScreen scene
+onready var start_screen = $CanvasLayer/StartScreen
+
 var Enemy = preload("res://InfiniteEnemy.tscn")
 var Projectile = preload("res://Projectile.tscn")  # Preload the projectile scene
 
+onready var freezesfx = $freeze_sfx
+onready var doomsfx = $doom_sfx
 onready var enemy_container = $EnemyContainer
 onready var spawn_container = $SpawnContainer
 onready var spawn_timer = $SpawnTimer
@@ -12,12 +17,15 @@ onready var attack_timer = $AttackTimer
 
 onready var difficulty_value = $CanvasLayer/VBoxContainer/TopRowLeft2/TopRow2/DifficultyValue
 onready var score_value = $CanvasLayer/VBoxContainer/TopRowLeft/EnemiesKilledValue
+onready var skill_point_label = $CanvasLayer/VBoxContainer/TopRow3/SPValue
 onready var label = $CanvasLayer/VBoxContainer
 onready var game_over_screen = $CanvasLayer/GameOverScreen
 onready var winner_screen = $CanvasLayer/CompleteScreen
 onready var timer_label = $CanvasLayer/VBoxContainer/TopRowLeft/TopRow/TimerValue
-onready var life2 = $Life2
-onready var life3 = $Life3
+onready var frozen_effect = $CanvasLayer/VBoxContainer/Frozen_Effect
+onready var frozen_icon = $TextureRect3
+onready var doom_icon = $TextureRect4
+onready var doomskill = $Doom
 onready var score_value_end = $CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft/ScoreValue
 onready var accuracy_value = $CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft2/AccuracyValue
 onready var words_value = $CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/TopRowLeft3/WordsValue
@@ -33,6 +41,7 @@ var overall_words: Array = []
 
 var difficulty: int = 0
 var enemies_killed: int = 0
+var skillpoint: int = 0
 var life: int = 3
 
 var game_duration_seconds: int = 0
@@ -40,18 +49,38 @@ var timer_running: bool = false
 var timer_update: Timer = Timer.new()
 
 var launch_projectile_flag = false
+var skill_active = false  # Flag to track if a skill is active
 
 func _process(delta):
 	if launch_projectile_flag:
 		hero.play("attack")
 	else:
 		hero.play("idle")
+	if skillpoint == 0:
+		frozen_icon.hide()
+		doom_icon.hide()
+	else:
+		frozen_icon.show()
+		doom_icon.show()
 
 func _ready() -> void:
 	MusicManager.stop_menumusic()
 	MusicManager.play_infinitemusic()
 	add_child(timer_update)
 	timer_update.connect("timeout", self, "update_timer")
+	
+	# Debug print to check if the start_screen is found
+	print("Start screen: ", start_screen)
+	
+	start_screen.connect("start_game", self, "_on_StartGame")
+	start_screen.show()  # Show the start screen when the game starts
+		
+	# Hide the leaderboard panel initially
+	$CanvasLayer/LeaderBoard.hide()
+
+func _on_StartGame(player_name, starting_difficulty):
+	Global.player_name = player_name  # Assuming you have a global variable for the player's name
+	difficulty = starting_difficulty
 	start_game()
 
 func update_timer() -> void:
@@ -102,6 +131,24 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var typed_event = event as InputEventKey
 		var key_typed = PoolByteArray([typed_event.unicode]).get_string_from_utf8()
+		
+		# Check for the '1' key press to activate freeze()
+		if typed_event.scancode == KEY_1 and skillpoint >= 1:
+			skillpoint -= 1
+			update_skill_point_label()
+			freeze()
+			return
+		elif typed_event.scancode == KEY_2 and skillpoint >= 1:
+			skillpoint -= 1
+			update_skill_point_label()
+			remove_random_enemies(5)
+			return
+		
+		if skill_active:
+			return  # Don't allow typing if a skill is active
+		
+		frozen_icon.hide()
+		doom_icon.hide()
 
 		if active_enemies.empty():
 			find_new_active_enemy(key_typed)
@@ -123,14 +170,19 @@ func _unhandled_input(event: InputEvent) -> void:
 						launch_projectile(enemy)  # Launch the projectile at the enemy
 						active_enemies.erase(enemy)
 						completed_enemies.append(enemy)  # Add the completed enemy to the list
-						
 						enemies_killed += 1
 						score_value.text = str(enemies_killed)
+						check_skill_point()
 					break
 
 			if not found_enemy:
 				print("incorrectly typed %s" % key_typed)
 				incorrect_keystrokes += 1
+
+func check_skill_point():
+	if enemies_killed % 10 == 0:  # Every 10 enemies killed
+		skillpoint += 1
+		update_skill_point_label()
 
 func _on_SpawnTimer_timeout():
 	spawn_enemy()
@@ -154,9 +206,9 @@ func spawn_enemy():
 		print("No animations found in AnimationPlayer.")
 
 func _on_DifficultyTimer_timeout():
-	if difficulty >= 20:
+	if difficulty >= 100:
 		difficulty_timer.stop()
-		difficulty = 20
+		difficulty = 100
 		return
 
 	difficulty += 1
@@ -218,14 +270,21 @@ func game_over():
 	display_accuracy()  # Display accuracy when the game is over
 	update_word_labels()  # Update the word labels
 	update_score_label()  # Update the score label
+	
+	# Add entry to the leaderboard
+	Leaderboard.add_entry(Global.player_name, enemies_killed, correct_words.size())
+	show_leaderboard()
 
 func start_game():
 	hero.play("idle")
 	game_over_screen.hide()
-	difficulty = 0
+	$CanvasLayer/LeaderBoard.hide()  # Hide the leaderboard panel when the game starts
+	difficulty = difficulty
+	skillpoint = 0
 	enemies_killed = 0
-	difficulty_value.text = str(0)
+	difficulty_value.text = str(difficulty)
 	score_value.text = str(0)
+	update_skill_point_label()  # Update skill point label at start
 	randomize()
 	spawn_timer.start()
 	difficulty_timer.start()
@@ -234,6 +293,47 @@ func start_game():
 	spawn_enemy()
 	correct_keystrokes = 0  # Reset correct keystrokes
 	incorrect_keystrokes = 0  # Reset incorrect keystrokes
+
+func show_leaderboard():
+	var leaderboard_panel = $CanvasLayer/LeaderBoard
+	leaderboard_panel.show()
+	leaderboard_panel.update_leaderboard_display()  # Call update_leaderboard_display() on the PanelContainer
+
+func freeze():
+	# Freeze enemies for 3 seconds
+	for enemy in enemy_container.get_children():
+		enemy.freeze()  # Call a freeze method on the enemy script
+
+	frozen_effect.show()
+	yield(get_tree().create_timer(3.0), "timeout")
+	frozen_effect.hide()
+
+	# Slow down enemies for 2 seconds
+	for enemy in enemy_container.get_children():
+		enemy.slow_down()  # Call a slow_down method on the enemy script
+
+	yield(get_tree().create_timer(2.0), "timeout")
+
+func update_skill_point_label():
+	print("Updating skill point label to %d" % skillpoint)  # Debugging print
+	skill_point_label.text = str(skillpoint)
+
+func remove_random_enemies(count: int):
+	skill_active = true  # Set the skill active flag
+	# Show and play the doomskill animation
+	doomskill.show()
+	doomsfx.play()
+	doomskill.play("cast")
+	yield(doomskill, "animation_finished")  # Wait for the doomskill animation to finish
+	
+	# After the doomskill animation finishes, remove enemies
+	var enemies = enemy_container.get_children()
+	for i in range(min(count, enemies.size())):
+		enemies[i].queue_free()
+	
+	# Hide the doomskill after removing enemies
+	doomskill.hide()
+	skill_active = false  # Reset the skill active flag
 
 func _on_MenuButton_pressed():
 	MusicManager.stop_gameovermusic()
@@ -264,3 +364,6 @@ func _on_PauseButton_pressed():
 func _on_Restart_pressed():
 	MusicManager.stop_gameovermusic()
 	get_tree().change_scene("res://Infinite.tscn")
+
+func _on_LeaderBoard_pressed():
+	show_leaderboard()

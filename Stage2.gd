@@ -350,7 +350,6 @@ func freeze():
 		enemy.freeze()  # Call a freeze method on the enemy script
 
 	frozen_effect.show()
-	freezesfx.play()
 	yield(get_tree().create_timer(3.0), "timeout")
 	frozen_effect.hide()
 

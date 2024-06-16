@@ -1,7 +1,7 @@
 extends Control
 
 var images = [
-	preload("res://assets/intro/Black_colour.jpg")
+	preload("res://assets/intro/2-3.jpg")
 ]
 
 var dialogues = [

@@ -59,3 +59,9 @@ func get_bbcode_color_tag(color: Color) -> String:
 	
 func get_bbcode_end_color_tag() -> String:
 	return "[/color]"
+
+func freeze() -> void:
+	speed = 0.0  # Set speed to 0 to freeze the enemy
+
+func slow_down() -> void:
+	speed = original_speed * 0.5  # Slow down the enemy to half of its original speed

@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+onready var name_input = $StartScreen/VBoxContainer/NameInput
+onready var difficulty_slider = $StartScreen/VBoxContainer/DifficultySlider
+onready var start_button = $StartScreen/VBoxContainer/Start
+signal start_game(name, difficulty)
+
+func _ready():
+	start_button.connect(\"pressed\", self, \"_on_StartButton_pressed\")
+
+func _on_StartButton_pressed():
+	var player_name = name_input.text
+	var starting_difficulty = int(difficulty_slider.value)
+	emit_signal(\"start_game\", player_name, starting_difficulty)
+	self.hide()  # Hide the start screen when the game starts
+"
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Stage1.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -9,6 +9,9 @@
 [ext_resource path="res://assets/SPRITES/Hero/idle-2.png" type="Texture" id=7]
 [ext_resource path="res://projectile_sfx.tscn" type="PackedScene" id=8]
 [ext_resource path="res://enemydeath_sound.tscn" type="PackedScene" id=9]
+[ext_resource path="res://assets/buttons/pause_base.png" type="Texture" id=10]
+[ext_resource path="res://assets/buttons/pause_click.png" type="Texture" id=11]
+[ext_resource path="res://assets/buttons/pause_hover.png" type="Texture" id=12]
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
@@ -101,6 +104,7 @@ texture = ExtResource( 5 )
 stretch_mode = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer"]
 visible = false
@@ -214,7 +218,7 @@ text = "0"
 
 [node name="TopRow" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/TopRowLeft"]
 margin_left = 113.0
-margin_right = 598.0
+margin_right = 541.0
 margin_bottom = 38.0
 mouse_filter = 2
 
@@ -237,12 +241,6 @@ margin_right = 428.0
 margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "         "
-
-[node name="PauseButton" type="Button" parent="CanvasLayer/VBoxContainer/TopRowLeft/TopRow"]
-margin_left = 432.0
-margin_right = 485.0
-margin_bottom = 38.0
-text = "PAUSE"
 
 [node name="TopRowLeft2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer"]
 margin_top = 42.0
@@ -267,6 +265,18 @@ margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "0"
 
+[node name="Pause" type="TextureButton" parent="."]
+margin_left = 528.0
+margin_top = 8.0
+margin_right = 938.0
+margin_bottom = 148.0
+rect_scale = Vector2( 0.2, 0.2 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource( 10 )
+texture_pressed = ExtResource( 11 )
+texture_hover = ExtResource( 12 )
+
 [node name="enemydeath_sound" parent="." instance=ExtResource( 9 )]
 
 [node name="projectile_sfx" parent="." instance=ExtResource( 8 )]
@@ -279,4 +289,4 @@ text = "0"
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/PlayAgainButton" to="." method="_on_RestartButton_pressed"]
 [connection signal="pressed" from="CanvasLayer/CompleteScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/VBoxContainer/TopRowLeft/TopRow/PauseButton" to="." method="_on_PauseButton_pressed"]
+[connection signal="pressed" from="Pause" to="." method="_on_PauseButton_pressed"]
