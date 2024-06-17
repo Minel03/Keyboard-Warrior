@@ -520,7 +520,7 @@ margin_top = 55.0
 margin_right = 612.0
 margin_bottom = 100.0
 custom_fonts/font = SubResource( 11 )
-text = "RANK    NAME    SCORE    WORDS"
+text = "RANK    NAME    SCORE    ACCURACY"
 
 [node name="Rankings" type="Label" parent="CanvasLayer/LeaderBoard/VBoxContainer"]
 margin_top = 110.0

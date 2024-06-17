@@ -272,7 +272,7 @@ func game_over():
 	update_score_label()  # Update the score label
 	
 	# Add entry to the leaderboard
-	Leaderboard.add_entry(Global.player_name, enemies_killed, correct_words.size())
+	Leaderboard.add_entry(Global.player_name, enemies_killed, correct_keystrokes, incorrect_keystrokes)
 	show_leaderboard()
 
 func start_game():
@@ -296,7 +296,6 @@ func start_game():
 
 func show_leaderboard():
 	var leaderboard_panel = $CanvasLayer/LeaderBoard
-	leaderboard_panel.show()
 	leaderboard_panel.update_leaderboard_display()  # Call update_leaderboard_display() on the PanelContainer
 
 func freeze():
@@ -367,3 +366,4 @@ func _on_Restart_pressed():
 
 func _on_LeaderBoard_pressed():
 	show_leaderboard()
+	$CanvasLayer/LeaderBoard.show()

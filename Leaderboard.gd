@@ -23,18 +23,23 @@ func save_leaderboard():
 	file.store_string(to_json(leaderboard_data))
 	file.close()
 
-func add_entry(name, score, correct_words):
-	var new_entry = {"name": name, "score": score, "correct_words": correct_words}
+func calculate_accuracy(correct_keystrokes, incorrect_keystrokes) -> float:
+	var total_keystrokes = correct_keystrokes + incorrect_keystrokes
+	if total_keystrokes == 0:
+		return 0.0
+	return float(correct_keystrokes) / total_keystrokes * 100.0
+
+func add_entry(name, score, correct_keystrokes, incorrect_keystrokes):
+	var accuracy = calculate_accuracy(correct_keystrokes, incorrect_keystrokes)
+	var new_entry = {"name": name, "score": score, "accuracy": accuracy}
 	leaderboard_data.append(new_entry)
-	leaderboard_data.sort_custom(Leaderboard, "sort_entries")
+	leaderboard_data.sort_custom(self, "sort_entries")
 	if leaderboard_data.size() > max_entries:
 		leaderboard_data.pop_back()
 	save_leaderboard()
-	
+
 	return new_entry  # Return the new entry for potential highlighting
 
 static func sort_entries(a, b):
-	if a["score"] != b["score"]:
-		return b["score"] - a["score"]
-	else:
-		return b["correct_words"] - a["correct_words"]
+	return a["score"] > b["score"] if a["score"] != b["score"] else a["accuracy"] > b["accuracy"]
+		

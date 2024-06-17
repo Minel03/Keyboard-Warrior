@@ -17,10 +17,10 @@ func update_leaderboard_display():
 		var rank = str(i + 1)
 		var name = entry["name"]
 		var score = str(entry["score"])
-		var correct_words = str(entry["correct_words"])
+		var accuracy = "%.2f%%" % entry["accuracy"]
 		
 		# Format the entry
-		var entry_text = "%-7s %-9s %-8s %-6s" % [rank, name, score, correct_words]
+		var entry_text = "%-7s %-9s %-7s %-6s" % [rank, name, score, accuracy]
 		
 		# Check if the entry belongs to the current player
 		if name == current_player_name:
