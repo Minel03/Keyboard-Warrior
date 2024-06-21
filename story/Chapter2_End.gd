@@ -31,12 +31,8 @@ func update_slide():
 		dialogue_label.text = dialogues[current_index]
 		start_text_scroll()
 	else:
+		get_tree().paused = false
 		get_tree().change_scene("res://MainMenu.tscn")
-	
-func cleared_stage():
-	Click_sound.play()
-	var cleared_instance = clear_scene.instance()
-	add_child(cleared_instance)
 
 func start_text_scroll():
 	animation_player.play("text_slide")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://Infinite.gd" type="Script" id=1]
 [ext_resource path="res://assets/SpaceMono-Regular.ttf" type="DynamicFontData" id=2]
@@ -28,6 +28,12 @@
 [ext_resource path="res://assets/skills-gamedev/doom skill effect/1.png" type="Texture" id=26]
 [ext_resource path="res://StartScreen.gd" type="Script" id=27]
 [ext_resource path="res://LeaderBoardUI.gd" type="Script" id=28]
+[ext_resource path="res://assets/buttons/mainmenu_base.png" type="Texture" id=29]
+[ext_resource path="res://assets/buttons/mainmenu_click.png" type="Texture" id=30]
+[ext_resource path="res://assets/buttons/mainmenu_hover.png" type="Texture" id=31]
+[ext_resource path="res://assets/buttons/play_click.png" type="Texture" id=32]
+[ext_resource path="res://assets/buttons/play_hover.png" type="Texture" id=33]
+[ext_resource path="res://assets/buttons/play_base.png" type="Texture" id=34]
 
 [sub_resource type="SpriteFrames" id=7]
 animations = [ {
@@ -87,10 +93,6 @@ font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=13]
 size = 26
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=12]
-size = 36
 font_data = ExtResource( 2 )
 
 [node name="Main" type="Node2D"]
@@ -432,7 +434,6 @@ mouse_filter = 2
 mouse_filter = 2
 
 [node name="StartScreen" type="PanelContainer" parent="CanvasLayer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -2.0
@@ -484,12 +485,18 @@ margin_top = 390.0
 margin_right = 612.0
 margin_bottom = 406.0
 
-[node name="Start" type="Button" parent="CanvasLayer/StartScreen/VBoxContainer"]
+[node name="Startbutton" type="TextureButton" parent="CanvasLayer/StartScreen/VBoxContainer"]
+margin_left = 196.0
 margin_top = 456.0
-margin_right = 612.0
-margin_bottom = 516.0
-custom_fonts/font = SubResource( 12 )
-text = "START"
+margin_right = 416.0
+margin_bottom = 531.0
+rect_min_size = Vector2( 220, 75 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource( 34 )
+texture_pressed = ExtResource( 32 )
+texture_hover = ExtResource( 33 )
+expand = true
 
 [node name="LeaderBoard" type="PanelContainer" parent="CanvasLayer"]
 visible = false
@@ -528,12 +535,18 @@ margin_right = 612.0
 margin_bottom = 155.0
 custom_fonts/font = SubResource( 11 )
 
-[node name="Menu" type="Button" parent="CanvasLayer/LeaderBoard/VBoxContainer"]
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/LeaderBoard/VBoxContainer"]
+margin_left = 166.0
 margin_top = 165.0
-margin_right = 612.0
-margin_bottom = 225.0
-custom_fonts/font = SubResource( 12 )
-text = "Main Menu"
+margin_right = 446.0
+margin_bottom = 245.0
+rect_min_size = Vector2( 280, 80 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource( 29 )
+texture_pressed = ExtResource( 30 )
+texture_hover = ExtResource( 31 )
+expand = true
 
 [node name="Pause" type="TextureButton" parent="."]
 margin_left = 529.0
@@ -552,5 +565,5 @@ texture_hover = ExtResource( 10 )
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/Restart" to="." method="_on_Restart_pressed"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/LeaderBoard" to="." method="_on_LeaderBoard_pressed"]
 [connection signal="pressed" from="CanvasLayer/GameOverScreen/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
-[connection signal="pressed" from="CanvasLayer/LeaderBoard/VBoxContainer/Menu" to="CanvasLayer/LeaderBoard" method="_on_Menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/LeaderBoard/VBoxContainer/TextureButton" to="CanvasLayer/LeaderBoard" method="_on_Menu_pressed"]
 [connection signal="pressed" from="Pause" to="." method="_on_PauseButton_pressed"]

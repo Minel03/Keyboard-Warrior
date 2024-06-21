@@ -47,43 +47,52 @@ uppercase = true
 margin_left = 200.0
 margin_top = 376.0
 margin_right = 867.0
-margin_bottom = 1176.0
+margin_bottom = 1050.0
 rect_scale = Vector2( 0.3, 0.3 )
 
 [node name="ResumeButton" type="TextureButton" parent="VBoxContainer"]
 margin_left = 88.0
 margin_right = 578.0
 margin_bottom = 140.0
+rect_min_size = Vector2( 490, 140 )
 size_flags_horizontal = 4
+size_flags_vertical = 2
 texture_normal = ExtResource( 6 )
 texture_pressed = ExtResource( 7 )
 texture_hover = ExtResource( 8 )
+expand = true
 
 [node name="RestartButton" type="TextureButton" parent="VBoxContainer"]
 margin_left = 68.0
-margin_top = 144.0
+margin_top = 178.0
 margin_right = 598.0
-margin_bottom = 284.0
+margin_bottom = 318.0
+rect_min_size = Vector2( 530, 140 )
 size_flags_horizontal = 4
+size_flags_vertical = 2
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 11 )
 texture_hover = ExtResource( 10 )
+expand = true
 
 [node name="SettingsButton" type="TextureButton" parent="VBoxContainer"]
 margin_left = 53.0
-margin_top = 288.0
+margin_top = 356.0
 margin_right = 613.0
-margin_bottom = 418.0
+margin_bottom = 486.0
+rect_min_size = Vector2( 560, 130 )
 size_flags_horizontal = 4
+size_flags_vertical = 2
 texture_normal = ExtResource( 13 )
 texture_pressed = ExtResource( 14 )
 texture_hover = ExtResource( 15 )
+expand = true
 
 [node name="MainMenuButton" type="TextureButton" parent="VBoxContainer"]
 margin_left = 13.0
-margin_top = 422.0
+margin_top = 534.0
 margin_right = 653.0
-margin_bottom = 562.0
+margin_bottom = 674.0
 size_flags_horizontal = 4
 texture_normal = ExtResource( 12 )
 texture_pressed = ExtResource( 5 )

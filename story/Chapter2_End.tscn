@@ -38,9 +38,9 @@ rect_scale = Vector2( 0.621, 0.784 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = 24.0
-margin_top = -520.0
+margin_top = 491.87
 margin_right = 600.0
-margin_bottom = -80.0
+margin_bottom = 931.87
 custom_fonts/font = SubResource( 1 )
 align = 1
 autowrap = true

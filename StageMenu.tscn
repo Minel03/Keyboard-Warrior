@@ -98,12 +98,12 @@ texture_pressed = ExtResource( 7 )
 texture_hover = ExtResource( 9 )
 
 [node name="Title-1" type="Sprite" parent="."]
-position = Vector2( 248, 192 )
+position = Vector2( 304, 192 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 16 )
 
 [node name="Title-2" type="Sprite" parent="."]
-position = Vector2( 400, 288 )
+position = Vector2( 312, 288 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 17 )
 

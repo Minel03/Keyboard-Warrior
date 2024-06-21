@@ -3,7 +3,7 @@ extends PanelContainer
 onready var name_input = $VBoxContainer/NameInput
 onready var difficulty_input = $VBoxContainer/DifficultyInput
 onready var difficulty_slider = $VBoxContainer/DifficultySlider
-onready var start_button = $VBoxContainer/Start
+onready var start_button = $VBoxContainer/Startbutton
 
 signal start_game(name, difficulty)
 
